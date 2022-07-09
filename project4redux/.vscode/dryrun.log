@@ -1,0 +1,13 @@
+C:\Program Files\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin\mingw32-make.exe --dry-run --always-make --keep-going --print-directory
+mingw32-make: Entering directory 'c:/Users/mn-fi/Projects/git/compiler340/project4redux'
+g++ -g -Wall -std=c++11 -c inputbuf.cc
+g++ -g -Wall -std=c++11 -c lexer.cc
+g++ -g -Wall -std=c++11 -c project4.cc
+g++ -g -Wall -std=c++11 -c parser.cc
+g++ -g -Wall -std=c++11 -c symboltable.cc
+g++ -g -Wall -std=c++11 -c memorytable.cc
+g++ -g -Wall -std=c++11 -c expr.cc
+g++ -g -Wall -std=c++11 -c execute.cc
+g++ -g -Wall -std=c++11 -o a.out inputbuf.o lexer.o project4.o parser.o symboltable.o memorytable.o expr.o execute.o 
+mingw32-make: Leaving directory 'c:/Users/mn-fi/Projects/git/compiler340/project4redux'
+ 
