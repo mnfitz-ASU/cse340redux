@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/mn-fi/Projects/git/compiler340/project4
+# Install script for directory: C:/Users/mn-fi/Projects/git/cse340redux/project4redux
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/mn-fi/Projects/git/compiler340/project4/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/mn-fi/Projects/git/cse340redux/project4redux/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

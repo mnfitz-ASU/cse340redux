@@ -1,37 +1,37 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\mn-fi\Projects\git\compiler340\project4\project4.cc">
+    <ClCompile Include="C:\Users\mn-fi\Projects\git\cse340redux\project4redux\project4.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\mn-fi\Projects\git\compiler340\project4\inputbuf.cc">
+    <ClCompile Include="C:\Users\mn-fi\Projects\git\cse340redux\project4redux\inputbuf.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\mn-fi\Projects\git\compiler340\project4\lexer.cc">
+    <ClCompile Include="C:\Users\mn-fi\Projects\git\cse340redux\project4redux\lexer.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\mn-fi\Projects\git\compiler340\project4\parser.cc">
+    <ClCompile Include="C:\Users\mn-fi\Projects\git\cse340redux\project4redux\parser.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\mn-fi\Projects\git\compiler340\project4\symboltable.cc">
+    <ClCompile Include="C:\Users\mn-fi\Projects\git\cse340redux\project4redux\symboltable.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\mn-fi\Projects\git\compiler340\project4\memorytable.cc">
+    <ClCompile Include="C:\Users\mn-fi\Projects\git\cse340redux\project4redux\memorytable.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\mn-fi\Projects\git\compiler340\project4\execute.cc">
+    <ClCompile Include="C:\Users\mn-fi\Projects\git\cse340redux\project4redux\execute.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\mn-fi\Projects\git\compiler340\project4\expr.cc">
+    <ClCompile Include="C:\Users\mn-fi\Projects\git\cse340redux\project4redux\expr.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\mn-fi\Projects\git\compiler340\project4\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\mn-fi\Projects\git\cse340redux\project4redux\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{50313BDD-2125-31B0-895E-4A060E2E04A9}</UniqueIdentifier>
+      <UniqueIdentifier>{A264E33B-08BB-3B28-B0FB-6133299282B4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
