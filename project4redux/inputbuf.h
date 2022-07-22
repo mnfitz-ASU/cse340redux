@@ -1,40 +1,38 @@
-/*
- * Copyright (C) Rida Bazzi, 2017
- *
- * Do not share this file with anyone
- */
-#ifndef __INPUT_BUFFER__H__
-#define __INPUT_BUFFER__H__
+
+#ifndef INPUT_BUFFER
+#define INPUT_BUFFER
 
 #include <iostream>
+#include <istream>
 #include <string>
 #include <vector>
 
-class InputBuffer {
-  public:
-  	InputBuffer() = default;
-#if ENABLE_INPUT_STREAM_DEBUGGING
-	InputBuffer(std::istream& inStream);
-#endif
-    void GetChar(char&);
-    char UngetChar(char);
-    std::string UngetString(std::string);
-    bool EndOfInput();
+namespace cse340 {
 
-  private:
-    std::vector<char> input_buffer;
-#if ENABLE_INPUT_STREAM_DEBUGGING
-	std::istream& mStream{std::cin};
-#endif
+class InputBuffer 
+{
+public:
+    InputBuffer(const char* inFilename); // alt ctor
+    InputBuffer() = delete; // no default ctor
+    ~InputBuffer() = default; // default dtor
+
+    /// Return the next avialable character from this input buffer
+    char GetChar();
+    /// Push the provided character back into the stream
+    void UngetChar(char inChar);
+    /// Push the provided string back into the stream
+    void UngetString(std::string inString);
+    /// Test if the input has been exhausted
+    bool EndOfInput() const;
+
+private:
+// TRICKY: mFileStream must be declared first due to ctor initilization behaviors
+    std::ifstream mFileStream;
+    std::istream& mStream; // We own the stream to prevent unexpected deletions
+
+    std::vector<char> mUngetBuffer{};
 };
 
-#if ENABLE_INPUT_STREAM_DEBUGGING
-//ctor for input buffer
-inline InputBuffer::InputBuffer(std::istream& inStream) :
-	mStream{inStream}
-{
-	
-}
-#endif
+} // namespace cse340
 
-#endif  //__INPUT_BUFFER__H__
+#endif //INPUT_BUFFER

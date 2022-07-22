@@ -1,56 +1,58 @@
-/*
- * Copyright (C) Rida Bazzi, 2017
- *
- * Do not share this file with anyone
- */
 #include <iostream>
 #include <istream>
 #include <vector>
 #include <string>
 #include <cstdio>
+#include <assert.h>
+#include <fstream>
 
 #include "inputbuf.h"
 
-using namespace std;
+namespace cse340 {
 
-bool InputBuffer::EndOfInput()
+InputBuffer::InputBuffer(const char* inFilename) :
+    mFileStream{inFilename},
+    mStream{mFileStream ? mFileStream : std::cin}
 {
-    if (!input_buffer.empty())
-        return false;
-    else
-#if ENABLE_INPUT_STREAM_DEBUGGING
-		return mStream.eof();
-#else
-		return cin.eof();
-#endif
-
+    // Do Nothing
 }
 
-char InputBuffer::UngetChar(char c)
+char InputBuffer::GetChar()
 {
-    if (c != EOF)
-        input_buffer.push_back(c);;
-    return c;
+    char result;
+    if (!mUngetBuffer.empty()) 
+    {
+        // Read any previously ungotten chars here
+        result = mUngetBuffer.back();
+        mUngetBuffer.pop_back();
+    } 
+    else 
+    {
+        // Else read new characters from the stream
+        result = mStream.get();
+    }
+    return result;
 }
 
-void InputBuffer::GetChar(char& c)
+void InputBuffer::UngetChar(char inChar)
 {
-    if (!input_buffer.empty()) {
-        c = input_buffer.back();
-        input_buffer.pop_back();
-    } else {
-#if ENABLE_INPUT_STREAM_DEBUGGING
-		mStream.get(c);
-#else
-        cin.get(c);
-#endif
+    mUngetBuffer.push_back(inChar);
+}
+
+void InputBuffer::UngetString(std::string inString)
+{
+    for (char unget : inString)
+    {
+        UngetChar(unget);
     }
 }
 
-string InputBuffer::UngetString(string s)
+bool InputBuffer::EndOfInput() const
 {
-//  for (std::size_t i = 0; i < s.size(); i++)
-    for (unsigned i = 0; i < s.size(); i++)
-        input_buffer.push_back(s[s.size()-i-1]);
-    return s;
+    // We have reached end of file if mStream is exhausted 
+    // and there is no characters left to be read in the unget buffer
+    const bool isEof = (mStream.eof() && mUngetBuffer.empty());
+    return isEof;
 }
+
+} // namespace cse340
