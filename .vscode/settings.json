@@ -51,5 +51,6 @@
         "fstream": "cpp",
         "list": "cpp",
         "queue": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "${workspaceFolder}/project4redux"
 }

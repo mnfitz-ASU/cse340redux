@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <istream>
+#include <fstream>
 #include <string>
 #include <vector>
 
@@ -29,7 +30,6 @@ private:
 // TRICKY: mFileStream must be declared first due to ctor initilization behaviors
     std::ifstream mFileStream;
     std::istream& mStream; // We own the stream to prevent unexpected deletions
-
     std::vector<char> mUngetBuffer{};
 };
 
