@@ -1,18 +1,18 @@
-/*
- * Copyright (C) Rida Bazzi, 2017
- *
- * Do not share this file with anyone
- */
-#ifndef __LEXER__H__
-#define __LEXER__H__
+#ifndef LEXER_H
+#define LEXER_H
 
-#include <vector>
-#include <string>
-
+// cse340
 #include "inputbuf.h"
 
-// ------- token types -------------------
+// std
+#include <map>
+#include <string>
+#include <vector>
 
+namespace cse340{
+
+// Changes every time
+/*
 typedef enum { END_OF_FILE = 0,
     VAR, FOR, IF, WHILE, SWITCH, CASE, DEFAULT, INPUT, OUTPUT, ARRAY,
     PLUS, MINUS, DIV, MULT,
@@ -21,37 +21,104 @@ typedef enum { END_OF_FILE = 0,
     NOTEQUAL, GREATER, LESS,
     NUM, ID, ERROR
 } TokenType;
+*/
 
-class Token {
-  public:
-    void Print();
-
-    std::string lexeme;
-    TokenType token_type; 
-    int line_no;
+enum class TokenKind
+{ 
+    END_OF_FILE = 0,
+    VAR, FOR, IF, WHILE, SWITCH, CASE, DEFAULT, INPUT, OUTPUT, ARRAY,
+    PLUS, MINUS, DIV, MULT,
+    EQUAL, COLON, COMMA, SEMICOLON,
+    LBRAC, RBRAC, LPAREN, RPAREN, LBRACE, RBRACE,
+    NOTEQUAL, GREATER, LESS,
+    NUM, ID, ERROR
 };
 
-class LexicalAnalyzer {
-  public:
-    Token GetToken();
-    Token peek(int);
-	#if ENABLE_INPUT_STREAM_DEBUGGING
-    LexicalAnalyzer(std::istream& inStream);
-	#endif
-    LexicalAnalyzer();
+// Define my own Keyword Dictionary type
+using KeywordDict = std::map<std::string, TokenKind>;
 
-  private:
-    std::vector<Token> tokenList;
-    Token GetTokenMain();
-    int line_no;
-    int index;
-    Token tmp;
-    InputBuffer input;
+const KeywordDict& GetKeywordDict()
+{
+    // static makes this function level global initialized only when first called
+    static const KeywordDict sDict = 
+    {
+        // These are the reserved keywords 
+        {"VAR", TokenKind::VAR},
+        {"FOR", TokenKind::FOR},
+        {"IF", TokenKind::IF},
+        {"WHILE", TokenKind::WHILE},
+        {"SWITCH", TokenKind::SWITCH},
+        {"CASE", TokenKind::CASE},
+        {"DEFAULT", TokenKind::DEFAULT},
+        {"INPUT", TokenKind::INPUT},
+        {"OUTPUT", TokenKind::OUTPUT},
+        {"INPUT", TokenKind::INPUT},
+        {"ARRAY", TokenKind::ARRAY},
 
-    bool SkipSpace();
-    int FindKeywordIndex(std::string);
-    Token ScanIdOrKeyword();
-    Token ScanNumber();
-};
+        // These are the special characters
+        {"+", TokenKind::PLUS},
+        {"-", TokenKind::MINUS},
+        {"/", TokenKind::DIV},
+        {"*", TokenKind::MULT},
+        {"=", TokenKind::EQUAL},
+        {":", TokenKind::COLON},
+        {"},", TokenKind::SEMICOLON},
+        {"[", TokenKind::LBRAC},
+        {"]", TokenKind::RBRAC},
+        {"(", TokenKind::LPAREN},
+        {")", TokenKind::RPAREN},
+        {"{", TokenKind::LBRACE},
+        {"}", TokenKind::RBRACE},
+        {"<>", TokenKind::NOTEQUAL},
+        {">", TokenKind::GREATER},
+        {"<", TokenKind::LESS}
+    };
 
-#endif  //__LEXER__H__
+    return sDict;
+}
+
+class Lexer
+{
+public:
+// Doesn't change every time
+    class Token 
+    {
+    public:
+        //Token() = default; // Default ctor
+        Token(TokenKind inTokenKind = TokenKind::END_OF_FILE, int inLineNumber = -1); // Alt ctor
+
+        void Print();    
+
+        std::string mLexeme{""};
+        TokenKind mTokenKind{TokenKind::END_OF_FILE}; 
+        int mLineNumber{-1};
+    };
+
+public:
+    Lexer() = default;
+
+    Token Peek(int inLength);
+    void Load(std::istream& inStream);
+    Token Get();
+    
+private:
+    bool ScanSpace();
+    std::string ScanForStringDigits();
+    std::string ScanForStringAlpha();
+    Token TokenFromStringDigit(std::string inDigits); 
+    Token TokenFromStringAlpha(std::string inAlpha);
+
+    Token ScanNextToken();
+    /// Advances through the input string until a non-whitespace or EOF character is found. Returns true if EOF is reached.
+
+private:
+    std::vector<Token> mTokenList;
+    int mLineNumber;
+    int mIndex;
+    InputBuffer mBufferInput;
+}; // class lexer
+
+} // namespace cse340
+
+
+#endif // LEXER_H

@@ -4,6 +4,9 @@
 // std
 #include <array>
 
+namespace cse340 {
+
+
 int ExprStack::GetSize()
 {
 	return mExprStack.size();
@@ -75,51 +78,51 @@ bool ExprStack::IsEmpty()
 	return result;
 }
 
-/*static*/ int ExprPrecedence::ConvertTokenToIndex(TokenType inTokenType)
+/*static*/ int ExprPrecedence::ConvertTokenToIndex(TokenKind inTokenType)
 {
 	int index = -1;
 	switch (inTokenType)
 	{
-	case TokenType::PLUS:
+	case TokenKind::PLUS:
 		index = 0;
 		break;
 
-	case TokenType::MINUS:
+	case TokenKind::MINUS:
 		index = 1;
 		break;
 	
-	case TokenType::DIV:
+	case TokenKind::DIV:
 		index = 2;
 		break;
 
-	case TokenType::MULT:
+	case TokenKind::MULT:
 		index = 3;
 		break;
 	
-	case TokenType::LPAREN:
+	case TokenKind::LPAREN:
 		index = 4;
 		break;
 	
-	case TokenType::RPAREN:
+	case TokenKind::RPAREN:
 		index = 5;
 		break;
 
-	case TokenType::LBRAC:
+	case TokenKind::LBRAC:
 		index = 6;
 		break;
-	case TokenType::RBRAC:
+	case TokenKind::RBRAC:
 		index = 8;
 		break;
 
-	case TokenType::NUM:
+	case TokenKind::NUM:
 		index = 9;
 		break;
 
-	case TokenType::ID:
+	case TokenKind::ID:
 		index = 10;
 		break;
 
-	case TokenType::END_OF_FILE:
+	case TokenKind::END_OF_FILE:
 		index = 11;
 		break;
 
@@ -146,8 +149,8 @@ bool ExprStack::IsEmpty()
 /*static*/ ExprComparison ExprPrecedence::Compare(const ExprStack::Item& inItem1, const ExprStack::Item& inItem2)
 {
 
-	TokenType a = inItem1.mToken.token_type;
-	TokenType b = inItem2.mToken.token_type;
+	TokenKind a = inItem1.mToken.mTokenKind;
+	TokenKind b = inItem2.mToken.mTokenKind;
 
 	int index1 = ConvertTokenToIndex(a);
 	int index2 = ConvertTokenToIndex(b);
@@ -178,4 +181,7 @@ bool ExprStack::IsEmpty()
 	ExprComparison result = kOperatorPrecedence.at(index1).at(index2);	
 	return result;
 }
+
+
+} // namespace cse340
 

@@ -1,279 +1,257 @@
-/*
- * Copyright (C) Rida Bazzi, 2017
- *
- * Do not share this file with anyone
- */
-#include <iostream>
-#include <istream>
-#include <vector>
-#include <string>
-#include <cctype>
-
+// cse340
 #include "lexer.h"
-#include "inputbuf.h"
 
-using namespace std;
+// std
+#include <array>
+#include <istream>
+#include <stdexcept>   // for exception, runtime_error, out_of_range
 
-string reserved[] = { "END_OF_FILE",
-    "VAR", "FOR", "IF", "WHILE", "SWITCH", "CASE", "DEFAULT", "INPUT", "OUTPUT", "ARRAY",
-    "PLUS", "MINUS", "DIV", "MULT",
-    "EQUAL", "COLON", "COMMA", "SEMICOLON",
-    "LBRAC", "RBRAC", "LPAREN", "RPAREN", "LBRACE", "RBRACE",
-    "NOTEQUAL", "GREATER", "LESS",
-    "NUM", "ID", "ERROR"
-};
+namespace {
+// annonymous namespace
+using namespace cse340;
 
-#define KEYWORDS_COUNT 9
-
-void Token::Print()
+const std::string& TokenKindToString(TokenKind inTokenKind)
 {
-    cout << "{" << this->lexeme << " , "
-         << reserved[(int) this->token_type] << " , "
-         << this->line_no << "}\n";
-}
-
-#if ENABLE_INPUT_STREAM_DEBUGGING
-// The constructor function will get all token in the input and stores them 
-// in an internal vector. This faciliates the implementation of peek()
-LexicalAnalyzer::LexicalAnalyzer(std::istream& inStream) :
-	input{inStream}
-{
-    this->line_no = 1;
-    tmp.lexeme = "";
-    tmp.line_no = 1;
-    tmp.token_type = ERROR;
-
-    Token token = GetTokenMain();
-    index = 0;
-
-    while (token.token_type != END_OF_FILE)
+    for (const auto& entry : GetKeywordDict())
     {
-        tokenList.push_back(token);     // push token into internal list
-        token = GetTokenMain();        // and get next token from standatd input
-    }
-    // pushes END_OF_FILE is not pushed on the token list
-}
-#endif
-
-LexicalAnalyzer::LexicalAnalyzer()
-{
-    this->line_no = 1;
-    tmp.lexeme = "";
-    tmp.line_no = 1;
-    tmp.token_type = ERROR;
-
-    Token token = GetTokenMain();
-    index = 0;
-
-    while (token.token_type != END_OF_FILE)
-    {
-        tokenList.push_back(token);     // push token into internal list
-        token = GetTokenMain();        // and get next token from standatd input
-    }
-    // pushes END_OF_FILE is not pushed on the token list
-}
-
-bool LexicalAnalyzer::SkipSpace()
-{
-    char c;
-    bool space_encountered = false;
-
-    input.GetChar(c);
-    line_no += (c == '\n');
-
-    while (!input.EndOfInput() && isspace(c)) {
-        space_encountered = true;
-        input.GetChar(c);
-        line_no += (c == '\n');
-    }
-
-    if (!input.EndOfInput()) {
-        input.UngetChar(c);
-    }
-    return space_encountered;
-}
-
-int LexicalAnalyzer::FindKeywordIndex(string s)
-{
-    string keyword[] = { "VAR", "FOR", "IF", "WHILE", "SWITCH", "CASE", "DEFAULT", "input", "output", "ARRAY" };
-    for (int i = 0; i < KEYWORDS_COUNT; i++) {
-        if (s == keyword[i]) {
-            return i + 1;
+        if (entry.second == inTokenKind)
+        {
+            return entry.first;
         }
     }
-    return -1;
+
+    static const std::string sNotFound{};
+    return sNotFound;
 }
 
-Token LexicalAnalyzer::ScanNumber()
+TokenKind StringToTokenKind(const std::string& inString)
 {
-    char c;
+    TokenKind tokenKind = TokenKind::END_OF_FILE;
+    auto iter = GetKeywordDict().find(inString);
 
-    input.GetChar(c);
-    if (isdigit(c)) {
-        if (c == '0') {
-            tmp.lexeme = "0";
-        } else {
-            tmp.lexeme = "";
-            while (!input.EndOfInput() && isdigit(c)) {
-                tmp.lexeme += c;
-                input.GetChar(c);
-            }
-            if (!input.EndOfInput()) {
-                input.UngetChar(c);
+    const bool wasFound = (iter != GetKeywordDict().end());
+    if (wasFound)
+    {
+        tokenKind = iter->second;
+    }
+    else
+    {
+        for (char character : inString)
+        {
+            if (!isdigit(character))
+            {
+                tokenKind = TokenKind::ID;
+                break;
             }
         }
-        tmp.token_type = NUM;
-        tmp.line_no = line_no;
-        return tmp;
-    } else {
-        if (!input.EndOfInput()) {
-            input.UngetChar(c);
-        }
-        tmp.lexeme = "";
-        tmp.token_type = ERROR;
-        tmp.line_no = line_no;
-        return tmp;
+        tokenKind = TokenKind::NUM;
     }
+
+    return tokenKind;
 }
 
-Token LexicalAnalyzer::ScanIdOrKeyword()
-{
-    char c;
-    input.GetChar(c);
+} // namespace
 
-    if (isalpha(c)) 
-	{
-        tmp.lexeme = "";
-        while (!input.EndOfInput() && isalnum(c)) 
-		{
-            tmp.lexeme += c;
-            input.GetChar(c);
+namespace cse340 {
+
+// public
+
+std::string Lexer::ScanForStringDigits()
+{
+    std::string result = "";
+    for (;;)
+    {
+        char readChar = mBufferInput.GetChar();
+        if (!isdigit(readChar))
+        {
+            mBufferInput.UngetChar(readChar);
+            break;
         }
-        if (!input.EndOfInput()) 
-		{
-            input.UngetChar(c);
-        }
-        tmp.line_no = line_no;
-        int keywordIndex = FindKeywordIndex(tmp.lexeme);
-        if (keywordIndex != -1)
-            tmp.token_type = (TokenType) keywordIndex;
-        else
-            tmp.token_type = ID;
-    } else {
-        if (!input.EndOfInput()) {
-            input.UngetChar(c);
-        }
-        tmp.lexeme = "";
-        tmp.token_type = ERROR;
+        result += readChar;
     }
-    return tmp;
+    return result;
 }
 
-// GetToken() accesses tokens from the tokenList that is populated when a 
-// lexer object is instantiated
-Token LexicalAnalyzer::GetToken()
+std::string Lexer::ScanForStringAlpha()
 {
-    Token token;
-    if (index == tokenList.size()){       // return end of file if
-        token.lexeme = "";                // index is too large
-        token.line_no = line_no;
-        token.token_type = END_OF_FILE;
+    std::string result = "";
+    for (;;)
+    {
+        char readChar = mBufferInput.GetChar();
+        if (!isalpha(readChar))
+        {
+            mBufferInput.UngetChar(readChar);
+            break;
+        }
+        result += readChar;
     }
-    else{
-        token = tokenList[index];
-        index = index + 1;
+    return result;
+}
+
+Lexer::Token Lexer::TokenFromStringDigit(std::string inDigits)
+{
+    Token result{};
+    result.mLexeme = inDigits;
+    result.mLineNumber = mLineNumber;
+    result.mTokenKind = TokenKind::NUM;
+    return result;
+}
+
+Lexer::Token Lexer::TokenFromStringAlpha(std::string inAlpha)
+{
+    Token result{};
+    TokenKind tokenKind = StringToTokenKind(inAlpha);
+    if (tokenKind == TokenKind::END_OF_FILE)
+    {
+        tokenKind = TokenKind::ID;
     }
+    result.mTokenKind = tokenKind;
+    result.mLexeme = inAlpha;
+    result.mLineNumber = mLineNumber;
+    return result;
+}
+
+Lexer::Token::Token(TokenKind inTokenKind, int inLineNumber) :
+    mTokenKind{TokenKind::END_OF_FILE},
+    mLineNumber{inLineNumber},
+    mLexeme{""}
+{
+    // Do nothing
+}
+
+void Lexer::Token::Print()
+{
+    std::cout << "{" << this->mLexeme << " , "
+         << TokenKindToString(mTokenKind) << " , "
+         << this->mLineNumber << "}\n";
+}
+
+Lexer::Token Lexer::Peek(int inLength)
+{
+    if (inLength <= 0) 
+    {  
+        // We need to throw an exception here because we cannot peek in place or to the left
+        throw std::runtime_error{__FUNCTION__  ":Error: non positive argument\n"};    
+    }
+
+    int peekIndex = mIndex + inLength - 1;
+    if (peekIndex > (int)(mTokenList.size())-1) 
+    { // if peeking too far
+        Token token;                        // return END_OF_FILE
+        token.mLexeme = "";
+        token.mLineNumber = mLineNumber;
+        token.mTokenKind = TokenKind::END_OF_FILE;
+        return token;
+    } else
+        return mTokenList[peekIndex];
+}
+
+Lexer::Token Lexer::Get()
+{
+    Token token{};
+    const bool isListEmpty = mTokenList.empty();
+    if (!isListEmpty)
+    {
+        token = *mTokenList.end();
+        mTokenList.pop_back();
+    }   
     return token;
 }
 
-// peek requires that the argument "howFar" be positive.
-Token LexicalAnalyzer::peek(int howFar)
+void Lexer::Load(std::istream& inStream)
 {
-    if (howFar <= 0) {      // peeking backward or in place is not allowed
-        cout << "LexicalAnalyzer:peek:Error: non positive argument\n";
-        exit(-1);
+    mBufferInput.Reset(&inStream);
+    for (;;)
+    {
+        Token result = ScanNextToken();
+        mTokenList.push_back(result);
+        if (result.mTokenKind == TokenKind::END_OF_FILE)
+        {
+            break;
+        }
+    }
+}
+
+Lexer::Token Lexer::ScanNextToken()
+{
+    Token token{};
+    char readChar;
+    
+    const bool isAtEOF = ScanSpace();
+    if (isAtEOF)
+    {
+        // Nothing to read, return an empty token
+        return Token{TokenKind::END_OF_FILE, mLineNumber};
     }
 
-    int peekIndex = index + howFar - 1;
-    if (peekIndex > (int)(tokenList.size())-1) { // if peeking too far
-        Token token;                        // return END_OF_FILE
-        token.lexeme = "";
-        token.line_no = line_no;
-        token.token_type = END_OF_FILE;
+	// Not at end of File
+    readChar = mBufferInput.GetChar();
+    if (isdigit(readChar))
+    {
+        mBufferInput.UngetChar(readChar);
+        std::string inString = ScanForStringDigits();
+        return TokenFromStringDigit(inString);
+    }
+
+    // Not a digit
+    if (isalpha(readChar))
+    {
+        // We have to check for keywords/ID
+        mBufferInput.UngetChar(readChar);
+        std::string inString = ScanForStringAlpha();
+        return TokenFromStringAlpha(inString);
+    }
+
+    // Not a keyword/alphanumerical
+    token.mTokenKind = StringToTokenKind("" + readChar);
+    if (token.mTokenKind == TokenKind::LESS)
+    {
+        const bool isAtEnd = ScanSpace();
+        if (isAtEnd)
+        {
+            // We have found a LESS token
+            return token;
+        }
+        readChar = mBufferInput.GetChar();
+        if (readChar == '>')
+        {
+            // We have found a NOTEQUAL token
+            token.mTokenKind == TokenKind::NOTEQUAL;
+            return token;
+        }
+        // We have found a LESS token
+        mBufferInput.UngetChar(readChar);
         return token;
-    } else
-        return tokenList[peekIndex];
-}
-
-Token LexicalAnalyzer::GetTokenMain()
-{
-    char c;
-
-    SkipSpace();
-    tmp.lexeme = "";
-    tmp.line_no = line_no;
-	tmp.token_type = END_OF_FILE;
-     if (!input.EndOfInput())
-	 {
-        input.GetChar(c);
-	 }
-    else
-	{
-		return tmp;
-	}
-        
-	
-    switch (c) 
-	{
-        case '+':   tmp.token_type = PLUS;      return tmp;
-        case '-':   tmp.token_type = MINUS;     return tmp;
-        case '/':   tmp.token_type = DIV;       return tmp;
-        case '*':   tmp.token_type = MULT;      return tmp;
-        case '=':   tmp.token_type = EQUAL;     return tmp;
-        case ':':   tmp.token_type = COLON;     return tmp;
-        case ',':   tmp.token_type = COMMA;     return tmp;
-        case ';':   tmp.token_type = SEMICOLON; return tmp;
-        case '[':   tmp.token_type = LBRAC;     return tmp;
-        case ']':   tmp.token_type = RBRAC;     return tmp;
-        case '(':   tmp.token_type = LPAREN;    return tmp;
-        case ')':   tmp.token_type = RPAREN;    return tmp;
-        case '{':   tmp.token_type = LBRACE;    return tmp;
-        case '}':   tmp.token_type = RBRACE;    return tmp;
-        case '>':   tmp.token_type = GREATER;   return tmp;
-        case '<':
-            input.GetChar(c);
-            if (c == '>') 
-			{
-                tmp.token_type = NOTEQUAL;
-            } 
-			else 
-			{
-                if (!input.EndOfInput()) 
-				{
-                    input.UngetChar(c);
-                }
-                tmp.token_type = LESS;
-            }
-            return tmp;
-        default:
-            if (isdigit(c)) 
-			{
-                input.UngetChar(c);
-                return ScanNumber();
-            } 
-			else if (isalpha(c)) 
-			{
-                input.UngetChar(c);
-                return ScanIdOrKeyword();
-            } 
-			else if (input.EndOfInput())
-			{
-                tmp.token_type = END_OF_FILE;
-			}
-            else
-			{
-                tmp.token_type = ERROR;
-			}
-            return tmp;
     }
+
+    // Not a special symbol, therefore not a valid token
+    token.mTokenKind = TokenKind::ERROR;
+    return token;
 }
+
+// private
+bool Lexer::ScanSpace()
+{
+    bool isEOF = false;
+
+    for (;;)
+    {
+        if (mBufferInput.EndOfInput())
+        {
+            isEOF = true;
+            break;
+        }
+
+        const char readChar = mBufferInput.GetChar();
+        mLineNumber += (readChar == '\n');
+
+        if (!isspace(readChar))
+        {
+            mBufferInput.UngetChar(readChar);
+            break;
+        }
+    }
+    return isEOF;
+}
+
+}// namespace cse340

@@ -50,7 +50,9 @@
         "deque": "cpp",
         "fstream": "cpp",
         "list": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "map": "cpp",
+        "xtree": "cpp"
     },
     "cmake.sourceDirectory": "${workspaceFolder}/project4redux"
 }
