@@ -5,7 +5,14 @@ namespace project4 {
 
 using KeywordDict = std::map<std::string, TokenKind>;
 
-const KeywordDict& GetKeywordDict()
+Token::Token(TokenKind inTokenKind, int inLineNumber) :
+    mTokenKind{inTokenKind},
+    mLineNumber{inLineNumber}
+{
+
+}
+
+const KeywordDict& Token::GetKeywordDict()
 {
     // static makes this function level global initialized only when first called
     static const KeywordDict sDict = 

@@ -12,49 +12,32 @@
 
 namespace cse340 {
     
-using TokenKind = project4::TokenKind;
-
 class Lexer
 {
 public:
-// Doesn't change every time
-    class Token 
-    {
-    public:
-        //Token() = default; // Default ctor
-        Token(TokenKind inTokenKind = TokenKind::END_OF_FILE, int inLineNumber = -1); // Alt ctor
-
-        void Print();    
-
-        std::string mLexeme{""};
-        TokenKind mTokenKind{TokenKind::END_OF_FILE}; 
-        int mLineNumber{-1};
-    };
-
-public:
     Lexer() = default;
-
-    void PrintTokenList();
 
     Token Peek(int inLength);
     void Load(std::istream& inStream);
     Token Get();
+    void PrintTokenList();
     
 private:
     bool ScanSpace();
     std::string ScanForStringDigits();
     std::string ScanForStringAlpha();
-    Token TokenFromStringDigit(std::string inDigits); 
-    Token TokenFromStringAlpha(std::string inAlpha);
+    Token TokenFromStringDigit(const std::string& inDigits); 
+    Token TokenFromStringAlpha(const std::string& inAlpha);
+    Token TokenFromStringSpecial(const std::string& inSpecial);
 
     Token ScanNextToken();
     /// Advances through the input string until a non-whitespace or EOF character is found. Returns true if EOF is reached.
 
 private:
-    std::vector<Token> mTokenList;
-    int mLineNumber;
-    int mIndex;
-    InputBuffer mBufferInput;
+    std::vector<Token> mTokenList{};
+    int mLineNumber{};
+    int mIndex{};
+    InputBuffer mBufferInput{};
 }; // class lexer
 
 } // namespace cse340

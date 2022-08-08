@@ -27,7 +27,7 @@ class MainProgram4 : public MainProgram // is-a cse340::MainProgram
 {
 	
 private:
-	int OnRun(int argc, char* argv[]) override // "= 0" means derived class must implement
+	int OnRun(int argc, char* argv[]) override 
     {
 		char* possibleFilename = nullptr;
 		const bool hasPossibleFilenameArg = (argc >= 2);
@@ -56,7 +56,6 @@ namespace cse340 {
 
 void Parser::ParseProgram(std::istream& inStream)
 {
-	// Do nothing
 	mLexer.Load(inStream);
 	mLexer.PrintTokenList();
 }

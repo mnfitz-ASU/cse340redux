@@ -7,23 +7,40 @@
 #include <istream>
 #include <stdexcept>   // for exception, runtime_error, out_of_range
 
-// bring project4 namespace into scope
-namespace cse340 {
-using namespace cse340::project4;
-} // namespace cse340
-
 namespace { // annonymous namespace
 
 using namespace cse340;
 using TokenKind = project4::TokenKind;
 
+// FWD decls
+void PrintToken(const Token& inToken);
+void PrintTokenList(const std::vector<Token>& inList);
+const std::string& TokenKindToString(TokenKind inTokenKind);
+
+void PrintToken(const Token& inToken)
+{
+    std::cout << "{" << inToken.mLexeme << " , "
+         << TokenKindToString(inToken.mTokenKind) << " , "
+         << inToken.mLineNumber << "}\n";
+}
+
+void PrintTokenList(const std::vector<Token>& inList)
+{
+    for (Token token : inList)
+    {
+        PrintToken(token);
+    }
+}
+
 const std::string& TokenKindToString(TokenKind inTokenKind)
 {
-    for (const auto& entry : GetKeywordDict())
+    for (const auto& entry : Token::GetKeywordDict())
     {
-        if (entry.second == inTokenKind)
+    const TokenKind value = entry.second;
+        if (value == inTokenKind)
         {
-            return entry.first;
+            const std::string& key = entry.first;
+            return key;
         }
     }
 
@@ -33,32 +50,47 @@ const std::string& TokenKindToString(TokenKind inTokenKind)
 
 TokenKind StringToTokenKind(const std::string& inString)
 {
-    TokenKind tokenKind = TokenKind::END_OF_FILE;
-    std::string input = "";
-    for (char readChar : inString)
+    TokenKind tokenKind = TokenKind::ERROR;
+    do
     {
-        input += toupper(readChar);
-    }
-    auto iter = project4::GetKeywordDict().find(input);
-
-    const bool wasFound = (iter != project4::GetKeywordDict().end());
-    if (wasFound)
-    {
-        tokenKind = iter->second; // TODO: Some weird stuff is going on here. Investigate
-    }
-    else
-    {
-        tokenKind = TokenKind::NUM;
-        for (char character : input)
+        if (inString.empty())
         {
-            if (!isdigit(character))
-            {
-                tokenKind = TokenKind::ID;
-                break;
-            }
+            break;
         }
-    }
 
+        std::string key = "";
+        for (char c : inString)
+        {
+            key += std::toupper(c);
+        }
+
+        const auto value = Token::GetKeywordDict().find(key);
+        const bool wasFound = (value != Token::GetKeywordDict().end());
+        if (wasFound)
+        {
+            tokenKind = value->second; 
+            break;
+        }
+
+        const char firstChar = key.at(0);
+        if (std::isdigit(firstChar))
+        {
+            // We have found a NUM token. Crash if the NUM contains alpha chars
+            tokenKind = TokenKind::NUM;
+            break;
+        }
+
+        if (std::isalpha(firstChar))
+        {
+            // We have found an ID token. IDs can contain digit chars, so no checks are required
+            tokenKind = TokenKind::ID;
+            break;
+        }
+        
+        tokenKind = TokenKind::ERROR;
+
+    } while (false);
+    
     return tokenKind;
 }
 
@@ -67,19 +99,24 @@ TokenKind StringToTokenKind(const std::string& inString)
 namespace cse340 {
 
 // public
-
 std::string Lexer::ScanForStringDigits()
 {
     std::string result = "";
     for (;;)
     {
-        char readChar = mBufferInput.GetChar();
-        if (!isdigit(readChar))
+        const char c = mBufferInput.GetChar();
+        if (c == InputBuffer::kEOF)
         {
-            mBufferInput.UngetChar(readChar);
             break;
         }
-        result += readChar;
+
+        if (!std::isdigit(c))
+        {
+            mBufferInput.UngetChar(c);
+            break;
+        }
+
+        result += c;
     }
     return result;
 }
@@ -89,18 +126,24 @@ std::string Lexer::ScanForStringAlpha()
     std::string result = "";
     for (;;)
     {
-        char readChar = mBufferInput.GetChar();
-        if (!isalpha(readChar))
+        const char c = mBufferInput.GetChar();
+        if (c == InputBuffer::kEOF)
         {
-            mBufferInput.UngetChar(readChar);
             break;
         }
-        result += readChar;
+
+        if (!std::isalpha(c))
+        {
+            mBufferInput.UngetChar(c);
+            break;
+        }
+
+        result += c;
     }
     return result;
 }
 
-Lexer::Token Lexer::TokenFromStringDigit(std::string inDigits)
+Token Lexer::TokenFromStringDigit(const std::string& inDigits)
 {
     Token result{};
     result.mLexeme = inDigits;
@@ -109,11 +152,11 @@ Lexer::Token Lexer::TokenFromStringDigit(std::string inDigits)
     return result;
 }
 
-Lexer::Token Lexer::TokenFromStringAlpha(std::string inAlpha)
+Token Lexer::TokenFromStringAlpha(const std::string& inAlpha)
 {
     Token result{};
     TokenKind tokenKind = StringToTokenKind(inAlpha);
-    if (tokenKind == TokenKind::END_OF_FILE)
+    if (tokenKind == TokenKind::ERROR)
     {
         tokenKind = TokenKind::ID;
     }
@@ -123,30 +166,26 @@ Lexer::Token Lexer::TokenFromStringAlpha(std::string inAlpha)
     return result;
 }
 
-Lexer::Token::Token(TokenKind inTokenKind, int inLineNumber) :
-    mTokenKind{TokenKind::END_OF_FILE},
-    mLineNumber{inLineNumber},
-    mLexeme{""}
+Token Lexer::TokenFromStringSpecial(const std::string& inSpecial)
 {
-    // Do nothing
-}
-
-void Lexer::Token::Print()
-{
-    std::cout << "{" << mLexeme << " , "
-         << TokenKindToString(mTokenKind) << " , "
-         << mLineNumber << "}\n";
+    Token result{TokenKind::ERROR};
+    TokenKind tokenKind = StringToTokenKind(inSpecial);
+    if (tokenKind != TokenKind::ERROR)
+    {
+        result.mTokenKind = tokenKind;
+        result.mLexeme = inSpecial;
+        result.mLineNumber = mLineNumber;
+    }
+    return result;
 }
 
 void Lexer::PrintTokenList()
 {
-    for (Token token : mTokenList)
-    {
-        token.Print();
-    }
+    // :: meaning the free function in an annonymous namespace
+    ::PrintTokenList(mTokenList);
 }
 
-Lexer::Token Lexer::Peek(int inLength)
+Token Lexer::Peek(int inLength)
 {
     if (inLength <= 0) 
     {  
@@ -154,25 +193,28 @@ Lexer::Token Lexer::Peek(int inLength)
         throw std::runtime_error{__FUNCTION__  ":Error: non positive argument\n"};    
     }
 
-    int peekIndex = mIndex + inLength - 1;
-    if (peekIndex > (int)(mTokenList.size())-1) 
+    const int index = mIndex + inLength - 1;
+    const bool isOutOfBounds = (index > static_cast<int>((mTokenList.size())-1));
+    if (isOutOfBounds) 
     { // if peeking too far
-        Token token;                        // return END_OF_FILE
+        Token token{};                        
         token.mLexeme = "";
-        token.mLineNumber = mLineNumber;
-        token.mTokenKind = TokenKind::END_OF_FILE;
         return token;
-    } else
-        return mTokenList[peekIndex];
+    } 
+    else
+    {
+        return mTokenList.at(index);
+    }
+        
 }
 
-Lexer::Token Lexer::Get()
+Token Lexer::Get()
 {
     Token token{};
     const bool isListEmpty = mTokenList.empty();
     if (!isListEmpty)
     {
-        token = *mTokenList.end();
+        token = mTokenList.back();
         mTokenList.pop_back();
     }   
     return token;
@@ -180,7 +222,7 @@ Lexer::Token Lexer::Get()
 
 void Lexer::Load(std::istream& inStream)
 {
-    mBufferInput.Reset(&inStream);
+    mBufferInput.Reset();
     for (;;)
     {
         Token result = ScanNextToken();
@@ -193,71 +235,67 @@ void Lexer::Load(std::istream& inStream)
     std::cout << "Read all tokens";
 }
 
-Lexer::Token Lexer::ScanNextToken()
+Token Lexer::ScanNextToken()
 {
-    Token token{};
-    char readChar;
-    
-    const bool isAtEOF = ScanSpace();
-    if (isAtEOF)
+    Token token{TokenKind::ERROR};
+    do
     {
-        // Nothing to read, return an empty token
-        return Token{TokenKind::END_OF_FILE, mLineNumber};
-    }
-
-	// Not at end of File
-    readChar = mBufferInput.GetChar();
-    if (isdigit(readChar))
-    {
-        mBufferInput.UngetChar(readChar);
-        std::string inString = ScanForStringDigits();
-        return TokenFromStringDigit(inString);
-    }
-
-    // Not a digit
-    if (isalpha(readChar))
-    {
-        // We have to check for keywords/ID
-        mBufferInput.UngetChar(readChar);
-        std::string inString = ScanForStringAlpha();
-        return TokenFromStringAlpha(inString);
-    }
-
-    //////////
-    std::string inString = {readChar};
-    // Not a keyword/alphanumerical
-    token.mTokenKind = StringToTokenKind(inString);
-    token.mLexeme = inString;
-    token.mLineNumber = mLineNumber;
-    //////////
-
-    if (token.mTokenKind == TokenKind::LESS)
-    {
-        const bool isAtEnd = ScanSpace();
-        if (isAtEnd)
+        bool isEOF = ScanSpace();
+        if (isEOF)
         {
-            // We have found a LESS token
-            return token;
+            // Nothing to read, return an empty token
+            token = {TokenKind::END_OF_FILE, mLineNumber};
+            token.mLexeme = "";
+            break;
         }
-        readChar = mBufferInput.GetChar();
-        if (readChar == '>')
+
+        char c = mBufferInput.PeekChar();
+        if (std::isdigit(c))
         {
-            // We have found a NOTEQUAL token
-            token.mTokenKind = TokenKind::NOTEQUAL;
-            return token;
+            const std::string digitString = ScanForStringDigits();
+            token = TokenFromStringDigit(digitString);
+            token.mLexeme = digitString;
+            break;
         }
-        // We have found a LESS token
-        mBufferInput.UngetChar(readChar);
-        return token;
-    }
 
-    // Not a special symbol, therefore not a valid token
+        if (std::isalpha(c))
+        {
+            const std::string alphaString = ScanForStringAlpha();
+            token = TokenFromStringAlpha(alphaString);
+            token.mLexeme = alphaString;
+            break;
+        }
 
-    if (token.mTokenKind == TokenKind::END_OF_FILE)
-    {
-        token.mTokenKind = TokenKind::ERROR;
-    }
-    
+        const std::string charString = {c};
+        // Not a keyword/alphanumerical
+        token = {StringToTokenKind(charString), mLineNumber};
+        token.mLexeme = charString;
+
+        if (token.mTokenKind != TokenKind::LESS)
+        {
+            break;
+        }
+
+        // LESS Token is special since it can represent LESS or the first half of a NOTEQUAL Token
+        isEOF = ScanSpace();
+        if (isEOF)
+        {
+            break;
+        }
+
+        c = mBufferInput.PeekChar();
+        if (c != '>')
+        {
+            break;
+        }
+
+        // Special NOTEQUAL Token case encountered
+        mBufferInput.GetChar();
+        token = {TokenKind::NOTEQUAL, mLineNumber};
+        token.mLexeme = "<>";
+
+    } while (false);
+
     return token;
 }
 
@@ -275,7 +313,11 @@ bool Lexer::ScanSpace()
         }
 
         const char readChar = mBufferInput.GetChar();
-        mLineNumber += (readChar == '\n');
+        const bool isEOL = (readChar == '\n');
+        if (isEOF)
+        {
+            mLineNumber++;
+        }
 
         if (!isspace(readChar))
         {

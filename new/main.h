@@ -26,7 +26,7 @@ public:
 
 private:
     // NVI: private virtual implementation 
-    virtual int OnRun(int argc, char* argv[]) // "= 0" means derived class must implement
+    virtual int OnRun(int argc, char* argv[]) 
     {
         assert(!"Create your own OnRun method!");
         return -1;

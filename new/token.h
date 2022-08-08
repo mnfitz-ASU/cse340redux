@@ -23,25 +23,30 @@ enum class TokenKind
 // Define my own Keyword Dictionary type
 using KeywordDict = std::map<std::string, TokenKind>;
 
-const KeywordDict& GetKeywordDict();
-
 class Token 
 {
 public: 
-using Kind = TokenKind;
+    using Kind = TokenKind;
 
 public:
-    //Token() = default; // Default ctor
-    Token(TokenKind inTokenKind = TokenKind::END_OF_FILE, int inLineNumber = -1); // Alt ctor
+    //Token() = delete; // No default ctor()
+    Token(TokenKind inTokenKind = TokenKind::ERROR, int inLineNumber = -1); // Alt ctor
 
     void Print();    
 
-    std::string mLexeme{""};
+    static const KeywordDict& GetKeywordDict();
+
     TokenKind mTokenKind{TokenKind::END_OF_FILE}; 
     int mLineNumber{-1};
+    std::string mLexeme{""};
 };
 
 } // namespace project4
+
+// IFFY!
+// Bring project4 into cse340 scope
+using namespace project4;
+
 } // namespace cse340
 
 #endif // TOKEN_H

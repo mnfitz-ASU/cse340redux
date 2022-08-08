@@ -11,20 +11,57 @@
 
 namespace cse340 {
 
+char InputBuffer::PeekChar()
+{
+    char result = kEOF;
+    do
+    {
+        if (!mUngetBuffer.empty()) 
+        {
+            // Read any previously ungotten chars here
+            result = mUngetBuffer.back();
+            break;
+        } 
+
+        // Else read new characters from the stream
+        if (GetStream().eof())
+        {
+            //assert(!"Nothing to read!");
+            result = kEOF;
+            break;
+        }
+
+        result = GetStream().peek();
+
+    } while (false);
+    
+    return result;
+}
+
 char InputBuffer::GetChar()
 {
-    char result;
-    if (!mUngetBuffer.empty()) 
+    char result = kEOF;
+    do
     {
-        // Read any previously ungotten chars here
-        result = mUngetBuffer.back();
-        mUngetBuffer.pop_back();
-    } 
-    else 
-    {
+        if (!mUngetBuffer.empty()) 
+        {
+            // Read any previously ungotten chars here
+            result = mUngetBuffer.back();
+            mUngetBuffer.pop_back();
+            break;
+        } 
+
         // Else read new characters from the stream
+        if (GetStream().eof())
+        {
+            //assert(!"Nothing to read!");
+            result = kEOF;
+            break;
+        }
         result = GetStream().get();
-    }
+
+    } while (false);
+
     return result;
 }
 
@@ -33,9 +70,11 @@ void InputBuffer::UngetChar(char inChar)
     mUngetBuffer.push_back(inChar);
 }
 
-void InputBuffer::UngetString(std::string inString)
+void InputBuffer::UngetString(const std::string& inString)
 {
-    for (char unget : inString)
+    std::string reverseStr = inString;
+    std::reverse(reverseStr.begin(), reverseStr.end());
+    for (char unget : reverseStr)
     {
         UngetChar(unget);
     }
@@ -49,11 +88,9 @@ bool InputBuffer::EndOfInput() const
     return isEof;
 }
 
-void InputBuffer::Reset(std::istream* inStream)
+void InputBuffer::Reset()
 {
-    mStream = inStream;
-    mFileStream = {};
-    mUngetBuffer = {};
+    mUngetBuffer.clear();
 }
 
 std::istream& InputBuffer::GetStream()

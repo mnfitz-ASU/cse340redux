@@ -5,7 +5,7 @@ include(CTest)
 enable_testing()
 
 # compile flags: -Wall "enable all compiler warnings"
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -DENABLE_INPUT_STREAM_DEBUGGING=1")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
 # c++ language version level: c++11
 set(CMAKE_CXX_STANDARD 11)
