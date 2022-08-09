@@ -8,9 +8,6 @@
 #include <vector>
 #include <string>
 
-namespace cse340 {
-
-
 #if 1
 
 class MemoryTable
@@ -47,8 +44,5 @@ private:
 	std::vector<Entry> mTable{}; // has-a: Table of integers
 };
 #endif // #if 1
-
-} // namespace cse340
-
 
 #endif //MEMORY_TABLE_H

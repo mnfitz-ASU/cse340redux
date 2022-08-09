@@ -3,79 +3,16 @@
 
 // cse340
 #include "inputbuf.h"
+#include "token.h"
 
 // std
 #include <map>
 #include <string>
 #include <vector>
 
-namespace cse340{
-
-// Changes every time
-/*
-typedef enum { END_OF_FILE = 0,
-    VAR, FOR, IF, WHILE, SWITCH, CASE, DEFAULT, INPUT, OUTPUT, ARRAY,
-    PLUS, MINUS, DIV, MULT,
-    EQUAL, COLON, COMMA, SEMICOLON,
-    LBRAC, RBRAC, LPAREN, RPAREN, LBRACE, RBRACE,
-    NOTEQUAL, GREATER, LESS,
-    NUM, ID, ERROR
-} TokenType;
-*/
-
-enum class TokenKind
-{ 
-    END_OF_FILE = 0,
-    VAR, FOR, IF, WHILE, SWITCH, CASE, DEFAULT, INPUT, OUTPUT, ARRAY,
-    PLUS, MINUS, DIV, MULT,
-    EQUAL, COLON, COMMA, SEMICOLON,
-    LBRAC, RBRAC, LPAREN, RPAREN, LBRACE, RBRACE,
-    NOTEQUAL, GREATER, LESS,
-    NUM, ID, ERROR
-};
-
-// Define my own Keyword Dictionary type
-using KeywordDict = std::map<std::string, TokenKind>;
-
-const KeywordDict& GetKeywordDict()
-{
-    // static makes this function level global initialized only when first called
-    static const KeywordDict sDict = 
-    {
-        // These are the reserved keywords 
-        {"VAR", TokenKind::VAR},
-        {"FOR", TokenKind::FOR},
-        {"IF", TokenKind::IF},
-        {"WHILE", TokenKind::WHILE},
-        {"SWITCH", TokenKind::SWITCH},
-        {"CASE", TokenKind::CASE},
-        {"DEFAULT", TokenKind::DEFAULT},
-        {"INPUT", TokenKind::INPUT},
-        {"OUTPUT", TokenKind::OUTPUT},
-        {"INPUT", TokenKind::INPUT},
-        {"ARRAY", TokenKind::ARRAY},
-
-        // These are the special characters
-        {"+", TokenKind::PLUS},
-        {"-", TokenKind::MINUS},
-        {"/", TokenKind::DIV},
-        {"*", TokenKind::MULT},
-        {"=", TokenKind::EQUAL},
-        {":", TokenKind::COLON},
-        {"},", TokenKind::SEMICOLON},
-        {"[", TokenKind::LBRAC},
-        {"]", TokenKind::RBRAC},
-        {"(", TokenKind::LPAREN},
-        {")", TokenKind::RPAREN},
-        {"{", TokenKind::LBRACE},
-        {"}", TokenKind::RBRACE},
-        {"<>", TokenKind::NOTEQUAL},
-        {">", TokenKind::GREATER},
-        {"<", TokenKind::LESS}
-    };
-
-    return sDict;
-}
+namespace cse340 {
+    
+using TokenKind = project4::TokenKind;
 
 class Lexer
 {

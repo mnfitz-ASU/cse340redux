@@ -1,5 +1,6 @@
 // cse340
 #include "main.h"
+#include "assignment4.cc"
 
 #include <iostream>
 #include <stdexcept>

@@ -9,9 +9,6 @@
 #include <string>
 #include <vector>
 
-namespace cse340 {
-
-
 class SymbolTable
 {
 public:
@@ -63,8 +60,5 @@ private:
 	std::vector<Entry> mSymTable{}; // has-a: Table of Entries
 	MemoryTable mMemTable{};
 };
-
-
-} // namespace cse340
 
 #endif //SYMBOL_TABLE_H
