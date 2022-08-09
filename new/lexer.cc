@@ -222,12 +222,12 @@ Token Lexer::Get()
 
 void Lexer::Load(std::istream& inStream)
 {
-    mBufferInput.Reset();
+    mBufferInput.Reset(&inStream);
     for (;;)
     {
         Token result = ScanNextToken();
         mTokenList.push_back(result);
-        if (result.mTokenKind == TokenKind::END_OF_FILE)
+        if (result.mTokenKind == TokenKind::END_OF_FILE) 
         {
             break;
         }
@@ -250,6 +250,7 @@ Token Lexer::ScanNextToken()
         }
 
         char c = mBufferInput.PeekChar();
+
         if (std::isdigit(c))
         {
             const std::string digitString = ScanForStringDigits();
@@ -270,6 +271,7 @@ Token Lexer::ScanNextToken()
         // Not a keyword/alphanumerical
         token = {StringToTokenKind(charString), mLineNumber};
         token.mLexeme = charString;
+        mBufferInput.GetChar();
 
         if (token.mTokenKind != TokenKind::LESS)
         {
@@ -313,8 +315,13 @@ bool Lexer::ScanSpace()
         }
 
         const char readChar = mBufferInput.GetChar();
-        const bool isEOL = (readChar == '\n');
+        isEOF = (readChar == InputBuffer::kEOF);
         if (isEOF)
+        {
+            break;
+        }
+        const bool isEOL = (readChar == '\n');
+        if (isEOL)
         {
             mLineNumber++;
         }

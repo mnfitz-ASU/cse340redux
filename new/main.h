@@ -15,7 +15,6 @@ class MainProgram // MainProgram utilizes NVI (Non-Virtual Interface) architectu
 public:
     static std::unique_ptr<MainProgram> Make();
 
-    MainProgram() = default;
     virtual ~MainProgram() = default;
     
     // NVI: public non-virtual interface 
@@ -24,9 +23,12 @@ public:
         return OnRun(argc, argv);
     }
 
+protected:
+    MainProgram() = default; // Can only be used by a derived class
+
 private:
     // NVI: private virtual implementation 
-    virtual int OnRun(int argc, char* argv[]) 
+    virtual int OnRun(int /*argc*/, char*[] /*argv[]*/) 
     {
         assert(!"Create your own OnRun method!");
         return -1;

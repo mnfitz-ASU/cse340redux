@@ -30,7 +30,7 @@ public:
     /// Test if the input has been exhausted
     bool EndOfInput() const;
     /// Reset the contents of the given InputBuffer
-    void Reset();
+    void Reset(std::istream* inStream = nullptr);
 
 private:
     /// Safely access the contents of mStream 

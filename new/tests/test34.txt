@@ -1,0 +1,12 @@
+
+j, i, minusfour, k ;
+
+{
+	FOR (i=0; i < 3; i=i+1;){
+		FOR (j=10; j < 18; j=j+2;){
+			output i;
+			output j;
+		}
+	}
+}
+9 8 3 7

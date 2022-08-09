@@ -32,6 +32,11 @@ char InputBuffer::PeekChar()
         }
 
         result = GetStream().peek();
+        if (result == EOF)
+        {
+            result = kEOF;
+            break;
+        }
 
     } while (false);
     
@@ -88,8 +93,15 @@ bool InputBuffer::EndOfInput() const
     return isEof;
 }
 
-void InputBuffer::Reset()
+void InputBuffer::Reset(std::istream* inStream)
 {
+    mStream = inStream;
+    if (inStream != nullptr)
+    {
+        mStream->clear();
+        mStream->seekg(0, std::ios::beg);    
+    }
+    
     mUngetBuffer.clear();
 }
 
