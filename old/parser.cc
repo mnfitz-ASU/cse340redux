@@ -19,8 +19,6 @@
 #include <iostream>
 #include <tuple>
 
-namespace cse340 {
-
 // Stolen from execute.h
 extern std::vector<int> inputs;
 
@@ -51,46 +49,46 @@ void Parser::append_assignment_error(int inLineNum)
 }
 
 // Written by Mohsen Zohrevandi
-Lexer::Token Parser::expect(TokenKind expected_type)
+Token Parser::expect(TokenType expected_type)
 {
-    Lexer::Token t = mLexer.Get();
-    if (t.mTokenKind != expected_type)
+    Token t = mLexer.GetToken();
+    if (t.token_type != expected_type)
         syntax_error();
     return t;
 }
 
-Lexer::Token Parser::PopExpect(ExprStack& ioStack, TokenKind inType)
+Token Parser::PopExpect(ExprStack& ioStack, TokenType inType)
 {
 	ExprStack::Item item = ioStack.Pop();
-    if (item.mToken.mTokenKind != inType)
+    if (item.mToken.token_type != inType)
         syntax_error();
     return item.mToken;
 }
 
-Lexer::Token Parser::NextSymbol()
+Token Parser::NextSymbol()
 {
-	Lexer::Token nextSymbol = mLexer.Peek(1);
+	Token nextSymbol = mLexer.peek(1);
 
 	// Check out my super tricky do-while(false) statment!
 	do
 	{
-		if (nextSymbol.mTokenKind == TokenKind::SEMICOLON)
+		if (nextSymbol.token_type == TokenType::SEMICOLON)
 		{
-			nextSymbol.mTokenKind = TokenKind::END_OF_FILE;
+			nextSymbol.token_type = TokenType::END_OF_FILE;
 			break;
 		}
 
-		if (nextSymbol.mTokenKind == TokenKind::EQUAL)
+		if (nextSymbol.token_type == TokenType::EQUAL)
 		{
-			nextSymbol.mTokenKind = TokenKind::END_OF_FILE;
+			nextSymbol.token_type = TokenType::END_OF_FILE;
 			break;
 		}
 
-		Lexer::Token peek = mLexer.Peek(2);
-		if (nextSymbol.mTokenKind == TokenKind::RBRAC 
-			&& peek.mTokenKind == TokenKind::EQUAL)
+		Token peek = mLexer.peek(2);
+		if (nextSymbol.token_type == TokenType::RBRAC 
+			&& peek.token_type == TokenType::EQUAL)
 		{
-			nextSymbol.mTokenKind = TokenKind::END_OF_FILE;
+			nextSymbol.token_type = TokenType::END_OF_FILE;
 			break;
 		}
 	} while (false);
@@ -101,20 +99,21 @@ Lexer::Token Parser::NextSymbol()
 Parser::Parser()
 {
 	// Initially, stack contains $, scanning starts at the start of w
-	const Lexer::Token eofToken = {TokenKind::END_OF_FILE};
-	eofToken.mLexeme = "$";
+	const Token eofToken = {"$", TokenType::END_OF_FILE};
 	ExprStack::Item eofItem{eofToken};
 	mExprStack.Push(eofToken);
 }
 
+#if ENABLE_INPUT_STREAM_DEBUGGING
 Parser::Parser(std::istream& inStream) :
 	mLexer{inStream}
 {
 	// Initially, stack contains $, scanning starts at the start of w
-	const Lexer::Token eofToken = {"$", TokenKind::END_OF_FILE};
+	const Token eofToken = {"$", TokenType::END_OF_FILE};
 	ExprStack::Item eofItem{eofToken};
 	mExprStack.Push(eofToken);
 }
+#endif // ENABLE_INPUT_STREAM_DEBUGGING
 
 ////////////////////////////////
 // Grammar Definition Section //
@@ -133,7 +132,7 @@ void Parser::ParseVarSection()
 {
 	// var section → idlist SEMICOLON
 	ParseIdList();
-	expect(TokenKind::SEMICOLON);
+	expect(TokenType::SEMICOLON);
 }
 
 void Parser::ParseBody(std::list<InstructionNode*>& ioList)
@@ -143,9 +142,9 @@ void Parser::ParseBody(std::list<InstructionNode*>& ioList)
 	std::list<InstructionNode*>* previousList = InstructionListGet(); // Save previous InstructionNode* List
 	InstructionListSet(&ioList); // Set current InstructionList* List
 	{
-		expect(TokenKind::LBRACE);
+		expect(TokenType::LBRACE);
 		ParseStatementList();
-		expect(TokenKind::RBRACE);
+		expect(TokenType::RBRACE);
 	}
 	InstructionListSet(previousList); // Restore previous InstructionNode* List
 }
@@ -153,17 +152,17 @@ void Parser::ParseBody(std::list<InstructionNode*>& ioList)
 void Parser::ParseIdList() 
 {
 	// id list → ID COMMA idlist | ID
-	Lexer::Token id = expect(TokenKind::ID);
-	int search = mSymbolTable.AddEntry(id.mLexeme, ExprType::kScalar);
+	Token id = expect(TokenType::ID);
+	int search = mSymbolTable.AddEntry(id.lexeme, ExprType::kScalar);
 	if (search == -1)
 	{
 		syntax_error();
 	}
 
-	Lexer::Token peek = mLexer.Peek(1);
-	if (peek.mTokenKind == TokenKind::COMMA)
+	Token peek = mLexer.peek(1);
+	if (peek.token_type == COMMA)
 	{
-		expect(TokenKind::COMMA);
+		expect(TokenType::COMMA);
 		ParseIdList();
 	}
 }
@@ -174,8 +173,8 @@ void Parser::ParseStatementList()
 	for (;;)
 	{
 		ParseStatement();
-		Lexer::Token peek = mLexer.Peek(1);
-		if (peek.mTokenKind == TokenKind::RBRACE)
+		Token peek = mLexer.peek(1);
+		if (peek.token_type == TokenType::RBRACE)
 		{
 			break;
 		}
@@ -185,34 +184,34 @@ void Parser::ParseStatementList()
 void Parser::ParseStatement()
 {
 	// stmt → assignstmt | whilestmt | ifstmt | switchstmt | forstmt | outputstmt | inputstmt
-	Lexer::Token peek = mLexer.Peek(1);
-	switch (peek.mTokenKind)
+	Token peek = mLexer.peek(1);
+	switch (peek.token_type)
 	{
-	case TokenKind::ID:
+	case TokenType::ID:
 		ParseAssignStatement();
 		break;
 
-	case TokenKind::WHILE:
+	case TokenType::WHILE:
 		ParseWhileStatement(); // DONE
 		break;
 
-	case TokenKind::SWITCH:
+	case TokenType::SWITCH:
 		ParseSwitchStatement(); // DONE
 		break;
 
-	case TokenKind::FOR:
+	case TokenType::FOR:
 		ParseForStatement(); // DONE
 		break;
 
-	case TokenKind::IF:
+	case TokenType::IF:
 		ParseIfStatement(); // DONE
 		break;
 
-	case TokenKind::OUTPUT:
+	case TokenType::OUTPUT:
 		ParseOutputStatement(); // DONE
 		break;
 
-	case TokenKind::INPUT:
+	case TokenType::INPUT:
 		ParseInputStatement(); // DONE
 		break;
 	
@@ -229,15 +228,15 @@ void Parser::ParseAssignStatement()
 	// TODO: remember the id
 	// ExprStack::Item left = mExprStack.Pop();
 
-	Lexer::Token id = expect(TokenKind::ID);
-	const int symIndex = mSymbolTable.Search(id.mLexeme);
+	Token id = expect(TokenType::ID);
+	const int symIndex = mSymbolTable.Search(id.lexeme);
 	if (symIndex == -1)
 	{
 		syntax_error();
 	}
 	
 	const int lhsMemIndex = mSymbolTable.GetMemoryIndexForEntryAt(symIndex);
-	expect(TokenKind::EQUAL);
+	expect(TokenType::EQUAL);
 
 	std::tuple<int, ArithmeticOperatorType, int> expr = ParseExpression();
 	// ParseExpression2();
@@ -251,14 +250,14 @@ void Parser::ParseAssignStatement()
 	InstructionNode* assign = MakeAssignNode(lhsMemIndex, rhsMemIndex1, op, rhsMemIndex2);
 	InstructionListAppend(assign);
 
-	expect(TokenKind::SEMICOLON);
+	expect(TokenType::SEMICOLON);
 }
 
 void Parser::ParseWhileStatement()
 {
 	// InstructionNode type: JMP
 	// whilestmt → WHILE condition body
-	expect(TokenKind::WHILE);
+	expect(TokenType::WHILE);
 	auto condition = ParseCondition();
 	
 	std::list<InstructionNode*> body{};
@@ -288,7 +287,7 @@ void Parser::ParseIfStatement()
 {
 	// InstructionNode type: CJMP
 	// ifstmt → IF condition body
-	expect(TokenKind::IF);
+	expect(TokenType::IF);
 	auto condition = ParseCondition();
 
 	std::list<InstructionNode*> body{};
@@ -315,19 +314,19 @@ void Parser::ParseForStatement()
 {
 	// InstructionNode type: CJMP
 	// forstmt → FOR LPAREN assign(initial) condition SEMICOLON assign(step) RPAREN body
-	expect(TokenKind::FOR);
-	expect(TokenKind::LPAREN);
+	expect(TokenType::FOR);
+	expect(TokenType::LPAREN);
 	ParseAssignStatement(); // Append "initial" InstructionNode(assign) to InstructionNode list
 
 	auto condition = ParseCondition();
-	expect(TokenKind::SEMICOLON);
+	expect(TokenType::SEMICOLON);
 
 	// Jump 1 is supposed to jump over the "step" InstructionNode(assign)
 	InstructionNode* jump1 = MakeJumpNode(nullptr, nullptr);
 	InstructionListAppend(jump1);
 
 	ParseAssignStatement(); // Append "step" InstructionNode(assign) to InstructionNode list
-	expect(TokenKind::RPAREN);
+	expect(TokenType::RPAREN);
 
 	std::list<InstructionNode*> body{};
 	ParseBody(body); // Create an InstructionNode* list for for-loop body
@@ -358,11 +357,11 @@ void Parser::ParseInputStatement()
 {
 	// InstructionNode type: IN
 	// inputstmt → input ID SEMICOLON
-	expect(TokenKind::INPUT);
-	Lexer::Token id = expect(TokenKind::ID);
-	expect(TokenKind::SEMICOLON);
+	expect(TokenType::INPUT);
+	Token id = expect(TokenType::ID);
+	expect(TokenType::SEMICOLON);
 
-	const int symIndex = mSymbolTable.Search(id.mLexeme);
+	const int symIndex = mSymbolTable.Search(id.lexeme);
 	if (symIndex == -1)
 	{
 		syntax_error();
@@ -376,11 +375,11 @@ void Parser::ParseOutputStatement()
 {
 	// InstructionNode type: OUT
 	// outputstmt → output ID SEMICOLON
-	expect(TokenKind::OUTPUT);
-	Lexer::Token id = expect(TokenKind::ID);
-	expect(TokenKind::SEMICOLON);
+	expect(TokenType::OUTPUT);
+	Token id = expect(TokenType::ID);
+	expect(TokenType::SEMICOLON);
 
-	const int symIndex = mSymbolTable.Search(id.mLexeme);
+	const int symIndex = mSymbolTable.Search(id.lexeme);
 	if (symIndex == -1)
 	{
 		syntax_error();
@@ -394,16 +393,16 @@ int Parser::ParsePrimary()
 {
 	// primary → ID | NUM
 	int memIndex = -1;
-	Lexer::Token peek = mLexer.Peek(1);
-	if (peek.mTokenKind == TokenKind::NUM)
+	Token peek = mLexer.peek(1);
+	if (peek.token_type == TokenType::NUM)
 	{
-		expect(TokenKind::NUM);
-		memIndex = mSymbolTable.AddEntryForNUM(stoi(peek.mLexeme));
+		expect(TokenType::NUM);
+		memIndex = mSymbolTable.AddEntryForNUM(stoi(peek.lexeme));
 	}
 	else
 	{
-		expect(TokenKind::ID);
-		const int symIndex = mSymbolTable.Search(peek.mLexeme);
+		expect(TokenType::ID);
+		const int symIndex = mSymbolTable.Search(peek.lexeme);
 		if (symIndex == -1)
 		{
 			syntax_error();
@@ -417,27 +416,27 @@ int Parser::ParsePrimary()
 ArithmeticOperatorType Parser::ParseOperator()
 {
 	// op → PLUS | MINUS | MULT | DIV
-	Lexer::Token peek = mLexer.Peek(1);
+	Token peek = mLexer.peek(1);
 	ArithmeticOperatorType result{ArithmeticOperatorType::OPERATOR_NONE};
-	switch (peek.mTokenKind)
+	switch (peek.token_type)
 	{
-	case TokenKind::PLUS:
-		expect(TokenKind::PLUS);
+	case TokenType::PLUS:
+		expect(TokenType::PLUS);
 		result = ArithmeticOperatorType::OPERATOR_PLUS;
 		break;
 
-	case TokenKind::MINUS:
-		expect(TokenKind::MINUS);
+	case TokenType::MINUS:
+		expect(TokenType::MINUS);
 		result = ArithmeticOperatorType::OPERATOR_MINUS;
 		break;
 
-	case TokenKind::MULT:
-		expect(TokenKind::MULT);
+	case TokenType::MULT:
+		expect(TokenType::MULT);
 		result = ArithmeticOperatorType::OPERATOR_MULT;
 		break;
 
-	case TokenKind::DIV:
-		expect(TokenKind::DIV);
+	case TokenType::DIV:
+		expect(TokenType::DIV);
 		result = ArithmeticOperatorType::OPERATOR_DIV;
 		break;
 
@@ -463,8 +462,8 @@ std::tuple<int, ArithmeticOperatorType, int>  Parser::ParseExpression()
 	ArithmeticOperatorType op = ArithmeticOperatorType::OPERATOR_NONE;
 	int primaryIndex2 = -1;
 
-	Lexer::Token peek = mLexer.Peek(1);
-	if (peek.mTokenKind != TokenKind::SEMICOLON)
+	Token peek = mLexer.peek(1);
+	if (peek.token_type != TokenType::SEMICOLON)
 	{
 		op = ParseOperator();
 		primaryIndex2 = ParsePrimary();
@@ -488,22 +487,22 @@ std::tuple<int, ConditionalOperatorType, int> Parser::ParseCondition()
 ConditionalOperatorType Parser::ParseRelationOperator()
 {
 	// relop → GREATER | LESS | NOTEQUAL
-	Lexer::Token peek = mLexer.Peek(1);
+	Token peek = mLexer.peek(1);
 	ConditionalOperatorType result{ConditionalOperatorType::CONDITION_NOTEQUAL};
-	switch (peek.mTokenKind)
+	switch (peek.token_type)
 	{
-	case TokenKind::GREATER:
-		expect(TokenKind::GREATER);
+	case TokenType::GREATER:
+		expect(TokenType::GREATER);
 		result = ConditionalOperatorType::CONDITION_GREATER;
 		break;
 
-	case TokenKind::LESS:
-		expect(TokenKind::LESS);
+	case TokenType::LESS:
+		expect(TokenType::LESS);
 		result = ConditionalOperatorType::CONDITION_LESS;
 		break;
 
-	case TokenKind::NOTEQUAL:
-		expect(TokenKind::NOTEQUAL);
+	case TokenType::NOTEQUAL:
+		expect(TokenType::NOTEQUAL);
 		result = ConditionalOperatorType::CONDITION_NOTEQUAL;
 		break;
 		
@@ -519,11 +518,11 @@ void Parser::ParseSwitchStatement()
 	// InstructionNode type: CJMP
 	// switchstmt → SWITCH ID LBRACE caselist RBRACE
 	// switchstmt → SWITCH ID LBRACE caselist defaultcase RBRACE
-	expect(TokenKind::SWITCH);
-	Lexer::Token id = expect(TokenKind::ID);
-	expect(TokenKind::LBRACE);
+	expect(TokenType::SWITCH);
+	Token id = expect(TokenType::ID);
+	expect(TokenType::LBRACE);
 	
-	const int symIndex = mSymbolTable.Search(id.mLexeme);
+	const int symIndex = mSymbolTable.Search(id.lexeme);
 	if (symIndex == -1)
 	{
 		syntax_error();
@@ -535,14 +534,14 @@ void Parser::ParseSwitchStatement()
 	const int memIndex = mSymbolTable.GetMemoryIndexForEntryAt(symIndex);
 	ParseCaseList(memIndex, endOfSwitch);
 
-	Lexer::Token peek = mLexer.Peek(1);
-	if (peek.mTokenKind != TokenKind::RBRACE)
+	Token peek = mLexer.peek(1);
+	if (peek.token_type != RBRACE)
 	{
 		ParseDefaultCase(endOfSwitch);
 	}
 
 	InstructionListAppend(endOfSwitch);
-	expect(TokenKind::RBRACE);
+	expect(TokenType::RBRACE);
 }
 
 void Parser::ParseCaseList(int inMemIndex, InstructionNode* inEndOfSwitch)
@@ -551,8 +550,8 @@ void Parser::ParseCaseList(int inMemIndex, InstructionNode* inEndOfSwitch)
 	for (;;)
 	{
 		ParseCase(inMemIndex, inEndOfSwitch);
-		Lexer::Token peek = mLexer.Peek(1);
-		if (peek.mTokenKind != TokenKind::CASE)
+		Token peek = mLexer.peek(1);
+		if (peek.token_type != TokenType::CASE)
 		{
 			break;
 		}
@@ -562,11 +561,11 @@ void Parser::ParseCaseList(int inMemIndex, InstructionNode* inEndOfSwitch)
 void Parser::ParseCase(int inMemIndex, InstructionNode* inEndOfSwitch)
 {
 	// case → CASE NUM COLON body
-	expect(TokenKind::CASE);
-	Lexer::Token num = expect(TokenKind::NUM);
-	expect(TokenKind::COLON);
+	expect(TokenType::CASE);
+	Token num = expect(TokenType::NUM);
+	expect(TokenType::COLON);
 	
-	int numIndex = mSymbolTable.AddEntryForNUM(stoi(num.mLexeme));
+	int numIndex = mSymbolTable.AddEntryForNUM(stoi(num.lexeme));
 	std::list<InstructionNode*> body{};
 	ParseBody(body); // Create an InstructionNode* list for this body
 
@@ -585,8 +584,8 @@ void Parser::ParseCase(int inMemIndex, InstructionNode* inEndOfSwitch)
 void Parser::ParseDefaultCase(InstructionNode* inEndOfSwitch)
 {
 	// defaultcase → DEFAULT COLON body
-	expect(TokenKind::DEFAULT);
-	expect(TokenKind::COLON);
+	expect(TokenType::DEFAULT);
+	expect(TokenType::COLON);
 	
 	std::list<InstructionNode*> body{};
 	ParseBody(body); // Create an InstructionNode* list for this body
@@ -605,11 +604,11 @@ void Parser::ParseNumList()
 	// numlist → NUM numlist
 	for (;;)
 	{
-		Lexer::Token num = expect(TokenKind::NUM);
-		inputs.push_back(stoi(num.mLexeme)); // Global variable from execute.cc here
+		Token num = expect(TokenType::NUM);
+		inputs.push_back(stoi(num.lexeme)); // Global variable from execute.cc here
 
-		Lexer::Token peek = mLexer.Peek(1);
-		if (peek.mTokenKind != TokenKind::NUM)
+		Token peek = mLexer.peek(1);
+		if (peek.token_type != TokenType::NUM)
 		{
 			break;
 		}
@@ -620,14 +619,14 @@ void Parser::ParseExpression2()
 {
 	for (;;)
 	{
-		//$ is on top of the stack and lexer.Peek() = $
-		Lexer::Token peek = NextSymbol();
+		//$ is on top of the stack and lexer.peek() = $
+		Token peek = NextSymbol();
 
 		// terminal at the top of stack or just below if top is non-terminal
 		ExprStack::Item* a = mExprStack.TopTerminal();
 		assert(a != nullptr);
-		const bool isEOFStackTop = (a->mToken.mTokenKind == TokenKind::END_OF_FILE);
-		const bool isEOFNextToken = (peek.mTokenKind == TokenKind::END_OF_FILE);
+		const bool isEOFStackTop = (a->mToken.token_type == TokenType::END_OF_FILE);
+		const bool isEOFNextToken = (peek.token_type == END_OF_FILE);
 		if (isEOFStackTop && isEOFNextToken)
 		{
 			break;
@@ -645,7 +644,7 @@ void Parser::ParseExpression2()
 		}
 		else
 		{
-			append_expression_error(a->mToken.mLineNumber);
+			append_expression_error(a->mToken.line_no);
 		}
 	}
 }
@@ -663,8 +662,8 @@ bool Parser::CanShift(const ExprStack::Item& inItem1, const ExprStack::Item& inI
 void Parser::DoShift(const ExprStack::Item& inItem)
 {
 	// Tricky: Expression stack should only contain operator precedence tokens; not semi-colons
-	if (inItem.mToken.mTokenKind == TokenKind::SEMICOLON 
-		|| inItem.mToken.mTokenKind == TokenKind::END_OF_FILE)
+	if (inItem.mToken.token_type == TokenType::SEMICOLON 
+		|| inItem.mToken.token_type == TokenType::END_OF_FILE)
 	{
 		syntax_error();
 	}
@@ -673,7 +672,7 @@ void Parser::DoShift(const ExprStack::Item& inItem)
 
 	// Only consume the token if you will return the real one, 
 	// otherwise leave the fake tokens intact in mTokenList
-	mLexer.Get();
+	mLexer.GetToken();
 }
 
 bool Parser::CanReduce(const ExprStack::Item& inItem1, const ExprStack::Item& inItem2)
@@ -722,17 +721,17 @@ void Parser::DoReduce()
 	assert(reduceParams.TopTerminal() != nullptr);
 	ExprStack::Item* topItem = reduceParams.TopTerminal();
 
-	switch (topItem->mToken.mTokenKind)
+	switch (topItem->mToken.token_type)
 	{
-	case TokenKind::ID:
-	case TokenKind::NUM:
+	case TokenType::ID:
+	case TokenType::NUM:
 	{
 		// expr → primary
 
 		// ID or NUM are the simplest expressions possible
 		if (reduceParams.GetSize() < 1)
 		{
-			append_expression_error(topItem->mToken.mLineNumber);
+			append_expression_error(topItem->mToken.line_no);
 		}
 		ExprTree::Node newNode{};
 		newNode.mToken = topItem->mToken; // ID or NUM
@@ -741,7 +740,7 @@ void Parser::DoReduce()
 		ExprStack::Item terminal = reduceParams.Pop(); // consume the terminal
 		if (!terminal.IsTerminal())
 		{
-			append_expression_error(topItem->mToken.mLineNumber);
+			append_expression_error(topItem->mToken.line_no);
 		}
 
 		// Fill in expression with id info
@@ -751,10 +750,10 @@ void Parser::DoReduce()
 		break;
 	}
 	
-	case TokenKind::MULT:
-	case TokenKind::PLUS:
-	case TokenKind::MINUS:
-	case TokenKind::DIV:
+	case TokenType::MULT:
+	case TokenType::PLUS:
+	case TokenType::MINUS:
+	case TokenType::DIV:
 	{
 		// expr → exprL MINUS exprR
 		// expr → exprL PLUS exprR
@@ -765,7 +764,7 @@ void Parser::DoReduce()
 		// Reduce two expressions and a terminal into one expression
 		if (reduceParams.GetSize() < 3)
 		{
-			append_expression_error(topItem->mToken.mLineNumber);
+			append_expression_error(topItem->mToken.line_no);
 		}
 		ExprTree::Node newNode{};
 		newNode.mToken = topItem->mToken; // OPERATOR
@@ -773,7 +772,7 @@ void Parser::DoReduce()
 		ExprStack::Item exprLeft = reduceParams.Pop();  // Consume exprLeft
 		if (!exprLeft.IsExpression())
 		{
-			append_expression_error(topItem->mToken.mLineNumber);
+			append_expression_error(topItem->mToken.line_no);
 		}
 		newNode.mLeft = exprLeft.mTree.GetRoot();
 
@@ -782,7 +781,7 @@ void Parser::DoReduce()
 		ExprStack::Item exprRight = reduceParams.Pop();// Consume exprRight
 		if (!exprRight.IsExpression())
 		{
-			append_expression_error(topItem->mToken.mLineNumber);
+			append_expression_error(topItem->mToken.line_no);
 		}
 		newNode.mRight = exprRight.mTree.GetRoot(); 
 
@@ -790,7 +789,7 @@ void Parser::DoReduce()
 		const ExprType rightType = newNode.mRight->mType;
 		if (leftType != rightType)
 		{
-			append_expression_error(topItem->mToken.mLineNumber);
+			append_expression_error(topItem->mToken.line_no);
 		}
 
 		newNode.mType = newNode.mLeft->mType;
@@ -801,29 +800,29 @@ void Parser::DoReduce()
 		break;
 	}
 
-	case TokenKind::LPAREN:
-	case TokenKind::RPAREN:
+	case TokenType::LPAREN:
+	case TokenType::RPAREN:
 	{
 		// expr → LPAREN expr RPAREN
 		if (reduceParams.GetSize() < 3)
 		{
-			append_expression_error(topItem->mToken.mLineNumber);
+			append_expression_error(topItem->mToken.line_no);
 		}
-		PopExpect(reduceParams, TokenKind::LPAREN); // Consume LParen
+		PopExpect(reduceParams, TokenType::LPAREN); // Consume LParen
 		// Fill in expression with id info
 		ExprStack::Item expr{reduceParams.Pop()}; // Consume expr
 		if (!expr.IsExpression())
 		{
-			append_expression_error(topItem->mToken.mLineNumber);
+			append_expression_error(topItem->mToken.line_no);
 		} 
-		PopExpect(reduceParams, TokenKind::RPAREN); // Consume RParen
+		PopExpect(reduceParams, TokenType::RPAREN); // Consume RParen
 
 		mExprStack.Push(expr); // Add the reduced expression back onto stack
 		break;
 	}
 
 	default:
-		append_expression_error(topItem->mToken.mLineNumber);
+		append_expression_error(topItem->mToken.line_no);
 		break;
 	}
 }
@@ -994,7 +993,3 @@ InstructionNode* MakeCJumpNode(ConditionalOperatorType inOperator, int inIndex1,
 
 	return newNode;
 }
-
-} // namespace cse340
-
-

@@ -18,7 +18,6 @@
 #include <string>
 #include <vector>
 
-namespace cse340 {
 class Parser 
 {
 public:
@@ -70,9 +69,9 @@ private:
 	void printAssignmentErrors();
 	void printExpressionErrors();
 
-    Lexer::Lexer::Token expect(TokenKind expected_type);
-	Lexer::Token PopExpect(ExprStack& ioStack, TokenKind inType);
-	Lexer::Token NextSymbol();
+    Token expect(TokenType expected_type);
+	Token PopExpect(ExprStack& ioStack, TokenType inType);
+	Token NextSymbol();
 
 	// Appends new InstructionNode onto the current InstructionNode list, 
 	// and sets next pointer of previous list, if any
@@ -83,7 +82,7 @@ private:
 	void InstructionListSet(std::list<InstructionNode*>* inList);
 
 private:
-	Lexer mLexer{}; // Has-a: lexer
+	LexicalAnalyzer mLexer{}; // Has-a: lexer
 	ExprStack mExprStack{}; // Has-a: expression stack
 
 	// SymbolTable stolen from Project 1
@@ -110,7 +109,5 @@ InstructionNode* MakeOutputNode(int inVarIndex);
 InstructionNode* MakeInputNode(int inVarIndex);
 InstructionNode* MakeJumpNode(InstructionNode* inTarget, InstructionNode* inNext);
 InstructionNode* MakeCJumpNode(ConditionalOperatorType inOperator, int inIndex1, int inIndex2, InstructionNode* inTarget, InstructionNode* inNext);
-
-} // namespace cse340
 
 #endif //__PARSER_H__

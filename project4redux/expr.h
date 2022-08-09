@@ -13,6 +13,8 @@
 // ------------------------------------------------------------------
 #pragma region Project2 Stuff
 
+namespace cse340 {
+
 constexpr int kArraySize = 10;
 
 enum class ExprComparison
@@ -42,32 +44,32 @@ public:
 	struct Node
 	{
 		// Probably need a type here too
-		Token mToken;
+		Lexer::Token mToken;
 		ExprType mType{ExprType::kScalar};
 		Node* mLeft{nullptr};
 		Node* mRight{nullptr};
 
 		void Print() const
 		{
-			switch (mToken.token_type)
+			switch (mToken.mTokenKind)
 			{
-			case TokenType::EQUAL:
+			case TokenKind::EQUAL:
 				std::cout << "=";
 				break;
-			case TokenType::PLUS:
+			case TokenKind::PLUS:
 				std::cout << " +";
 				break;
-			case TokenType::MINUS:
+			case TokenKind::MINUS:
 				std::cout << " -";
 				break;
-			case TokenType::MULT:
+			case TokenKind::MULT:
 				std::cout << " *";
 				break;
-			case TokenType::DIV:
+			case TokenKind::DIV:
 				std::cout << " /";
 				break;
 
-			case TokenType::LBRAC:
+			case TokenKind::LBRAC:
 				std::cout << " [";
 				if (mRight == nullptr)
 				{
@@ -77,15 +79,15 @@ public:
 				
 				break;
 			
-			case TokenType::ID:
-				std::cout << " ID \"" << mToken.lexeme << "\"";
+			case TokenKind::ID:
+				std::cout << " ID \"" << mToken.mLexeme << "\"";
 				break;
-			case TokenType::NUM:
-				std::cout << " NUM \"" << mToken.lexeme << "\"";
+			case TokenKind::NUM:
+				std::cout << " NUM \"" << mToken.mLexeme << "\"";
 				break;
 				
 			default:
-				std::cout << "WE GOT SOMETHING ELSE" << mToken.lexeme;
+				std::cout << "WE GOT SOMETHING ELSE" << mToken.mLexeme;
 				break;
 			}
 		}
@@ -193,11 +195,11 @@ public:
 	struct Item
 	{
 		ExprKind mKind{ExprKind::kExpression};
-		Token mToken{};
+		Lexer::Token mToken{};
 		ExprTree mTree{};
 
 		Item() = default; // Non-terminal item
-		Item(Token inToken) : // Terminal item
+		Item(Lexer::Token inToken) : // Terminal item
 			mKind{ExprKind::kTerminal},
 			mToken{inToken}
 		{
@@ -242,9 +244,13 @@ class ExprPrecedence
 public:
 	static ExprComparison Compare(const ExprStack::Item& inItem1, const ExprStack::Item& inItem2);
 private:
-	static int ConvertTokenToIndex(TokenType inTokenType);
+	static int ConvertTokenToIndex(TokenKind inTokenType);
 
 };
+
+
+} // namespace cse340
+
 
 #pragma endregion
 
