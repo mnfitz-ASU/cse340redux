@@ -23,10 +23,8 @@ class Parser
 {
 public:
 	Parser();
-
-#if ENABLE_INPUT_STREAM_DEBUGGING
 	Parser(std::istream& inStream);
-#endif
+	
 	InstructionNode* ParseProgram();
 	void ParseVarSection();
 	// Parse lexer's tokenList returning a per-body InstructionNode* list in ioList

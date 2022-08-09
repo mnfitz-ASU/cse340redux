@@ -17,16 +17,18 @@
 
 namespace cse340 {
 
+using namespace std;
 
 // This should've been declared in execute.h
 // We can't modify execute.h, so it's stuck here
 void execute_program(struct InstructionNode * program);
 
+#if ENABLE_INPUT_STREAM_DEBUGGING
 int main(int argc, char* argv[])
 {
     if (argc < 1)
     {
-        std::cout << "Error: missing argument\n";
+        cout << "Error: missing argument\n";
         return 1;
     }
 
@@ -56,5 +58,5 @@ int main(int argc, char* argv[])
     return 0;
 }
 
-
+#endif
 } // namespace cse340

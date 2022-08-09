@@ -6,9 +6,6 @@
 #include <fstream>
 #include <iostream>
 
-namespace cse340 {
-
-
 int SymbolTable::GetSize()
 {
 	const int size = mSymTable.size();
@@ -98,5 +95,3 @@ int& SymbolTable::MemoryScalarAt(std::size_t inIndex)
 {
 	return mMemTable.ScalarValueAt(inIndex);
 }
-
-} // namespace cse340

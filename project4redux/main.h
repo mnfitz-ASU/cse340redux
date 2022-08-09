@@ -29,6 +29,7 @@ private:
     virtual int OnRun(int argc, char* argv[]) // "= 0" means derived class must implement
     {
         assert(!"Create your own OnRun method!");
+        return -1;
     }
 
 }; // class MainProgram

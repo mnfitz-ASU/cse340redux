@@ -6,8 +6,6 @@
 #include <iostream> 
 #include <fstream>
 
-namespace cse340 {
-
 #if 1
 // Stolen from execute.h
 extern int mem[1000];
@@ -83,5 +81,3 @@ void MemoryTable::Clear()
 
 
 #endif
-
-} // namespace cse340

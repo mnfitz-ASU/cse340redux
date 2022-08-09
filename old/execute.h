@@ -9,8 +9,6 @@
 #include <string>
 #include <vector>
 
-namespace cse340 {
-
 extern int mem[1000];
 extern int next_available;
 
@@ -93,6 +91,16 @@ void debug(const char* format, ...);
 
 struct InstructionNode * parse_generate_intermediate_representation();
 
-} // namespace cse340
+/*
+  NOTE:
+
+  You need to write a function with the above signature. This function
+  is supposed to parse the input program and generate an intermediate
+  representation for it. The output of this function is passed to the
+  execute_program function in main().
+
+  Write your code in a separate file and include this header file in
+  your code.
+*/
 
 #endif /* _COMPILER_H_ */

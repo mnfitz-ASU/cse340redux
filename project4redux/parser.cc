@@ -101,19 +101,22 @@ Lexer::Token Parser::NextSymbol()
 Parser::Parser()
 {
 	// Initially, stack contains $, scanning starts at the start of w
-	const Lexer::Token eofToken = {TokenKind::END_OF_FILE};
+	Lexer::Token eofToken = {TokenKind::END_OF_FILE};
 	eofToken.mLexeme = "$";
 	ExprStack::Item eofItem{eofToken};
 	mExprStack.Push(eofToken);
 }
 
 Parser::Parser(std::istream& inStream) :
-	mLexer{inStream}
+	mLexer{}
 {
+	mLexer.Load(inStream);
 	// Initially, stack contains $, scanning starts at the start of w
-	const Lexer::Token eofToken = {"$", TokenKind::END_OF_FILE};
+	Lexer::Token eofToken = {TokenKind::END_OF_FILE};
+	eofToken.mLexeme = "$";
 	ExprStack::Item eofItem{eofToken};
 	mExprStack.Push(eofToken);
+	
 }
 
 ////////////////////////////////
@@ -236,7 +239,7 @@ void Parser::ParseAssignStatement()
 		syntax_error();
 	}
 	
-	const int lhsMemIndex = mSymbolTable.GetMemoryIndexForEntryAt(symIndex);
+	const int lhsMemIndex = mSymbolTable.GetMemoryIndexForEntryAt((size_t)symIndex);
 	expect(TokenKind::EQUAL);
 
 	std::tuple<int, ArithmeticOperatorType, int> expr = ParseExpression();
@@ -368,7 +371,7 @@ void Parser::ParseInputStatement()
 		syntax_error();
 	}
 	
-	const int memIndex = mSymbolTable.GetMemoryIndexForEntryAt(symIndex);
+	const int memIndex = mSymbolTable.GetMemoryIndexForEntryAt((size_t)symIndex);
 	InstructionListAppend(MakeInputNode(memIndex));
 }
 
@@ -386,7 +389,7 @@ void Parser::ParseOutputStatement()
 		syntax_error();
 	}
 	
-	const int memIndex = mSymbolTable.GetMemoryIndexForEntryAt(symIndex);
+	const int memIndex = mSymbolTable.GetMemoryIndexForEntryAt((size_t)symIndex);
 	InstructionListAppend(MakeOutputNode(memIndex));
 }
 
@@ -408,7 +411,7 @@ int Parser::ParsePrimary()
 		{
 			syntax_error();
 		}
-		memIndex = mSymbolTable.GetMemoryIndexForEntryAt(symIndex);
+		memIndex = mSymbolTable.GetMemoryIndexForEntryAt((size_t)symIndex);
 	}
 	
 	return memIndex;
@@ -532,7 +535,7 @@ void Parser::ParseSwitchStatement()
 	// Make a node that is the end of the node which all the cases can jump to
 	InstructionNode* endOfSwitch = MakeNoOpNode();
 
-	const int memIndex = mSymbolTable.GetMemoryIndexForEntryAt(symIndex);
+	const int memIndex = mSymbolTable.GetMemoryIndexForEntryAt((size_t)symIndex);
 	ParseCaseList(memIndex, endOfSwitch);
 
 	Lexer::Token peek = mLexer.Peek(1);

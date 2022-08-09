@@ -1,14 +1,21 @@
 // cse340
 #include "lexer.h"
+#include "token.h"
 
 // std
 #include <array>
 #include <istream>
 #include <stdexcept>   // for exception, runtime_error, out_of_range
 
-namespace {
-// annonymous namespace
+// bring project4 namespace into scope
+namespace cse340 {
+using namespace cse340::project4;
+} // namespace cse340
+
+namespace { // annonymous namespace
+
 using namespace cse340;
+using TokenKind = project4::TokenKind;
 
 const std::string& TokenKindToString(TokenKind inTokenKind)
 {
@@ -27,12 +34,12 @@ const std::string& TokenKindToString(TokenKind inTokenKind)
 TokenKind StringToTokenKind(const std::string& inString)
 {
     TokenKind tokenKind = TokenKind::END_OF_FILE;
-    auto iter = GetKeywordDict().find(inString);
+    auto iter = project4::GetKeywordDict().find(inString);
 
-    const bool wasFound = (iter != GetKeywordDict().end());
+    const bool wasFound = (iter != project4::GetKeywordDict().end());
     if (wasFound)
     {
-        tokenKind = iter->second;
+        tokenKind = iter->second; // TODO: Some weird stuff is going on here. Investigate
     }
     else
     {
@@ -216,7 +223,7 @@ Lexer::Token Lexer::ScanNextToken()
         if (readChar == '>')
         {
             // We have found a NOTEQUAL token
-            token.mTokenKind == TokenKind::NOTEQUAL;
+            token.mTokenKind = TokenKind::NOTEQUAL;
             return token;
         }
         // We have found a LESS token

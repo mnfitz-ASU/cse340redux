@@ -11,8 +11,6 @@
 #include <string>
 #include "execute.h"
 
-namespace cse340 {
-
 using namespace std;
 
 #define DEBUG 1     // 1 => Turn ON debugging, 0 => Turn OFF debugging
@@ -145,6 +143,3 @@ int main()
     return 0;
 }
 #endif
-
-} // namespace cse340
-
