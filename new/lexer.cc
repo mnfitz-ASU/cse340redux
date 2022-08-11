@@ -143,6 +143,35 @@ std::string Lexer::ScanForStringAlpha()
     return result;
 }
 
+std::string Lexer::ScanForStringSpecial()
+{
+    std::string result = "";
+    for (;;)
+    {
+        
+        bool isEOF = ScanSpace();
+        if (isEOF)
+        {
+            break;
+        }
+
+        const char c = mBufferInput.GetChar();
+        if (c == InputBuffer::kEOF)
+        {
+            break;
+        }
+
+        if (std::isalpha(c) || std::isdigit(c))
+        {
+            mBufferInput.UngetChar(c);
+            break;
+        }
+
+        result += c;
+    }
+    return result;
+}
+
 Token Lexer::TokenFromStringDigit(const std::string& inDigits)
 {
     Token result{};
@@ -176,6 +205,25 @@ Token Lexer::TokenFromStringSpecial(const std::string& inSpecial)
         result.mLexeme = inSpecial;
         result.mLineNumber = mLineNumber;
     }
+    else
+    {
+        int i = inSpecial.length();
+        for (; i > 1; i--)
+        {
+            // Check the string of all special chars for multichars in descending length
+            std::string subString = inSpecial.substr(0,i);
+            const bool foundMultichar = DidScanMultiCharToken(result, subString);
+            if (foundMultichar)
+            {
+                // multichar is found and token is updated
+                result.mLexeme = subString;
+                break;
+            }
+        }     
+        // After finding the longest matching multichar, be sure to unget any remaining characters that didn't match
+        std::string leftoverChars = inSpecial.substr(i, inSpecial.length());
+        mBufferInput.UngetString(leftoverChars);
+    }
     return result;
 }
 
@@ -185,7 +233,7 @@ void Lexer::PrintTokenList()
     ::PrintTokenList(mTokenList);
 }
 
-Token Lexer::Peek(int inLength)
+Token Lexer::PeekToken(int inLength)
 {
     if (inLength <= 0) 
     {  
@@ -208,7 +256,7 @@ Token Lexer::Peek(int inLength)
         
 }
 
-Token Lexer::Get()
+Token Lexer::GetToken()
 {
     Token token{};
     const bool isListEmpty = mTokenList.empty();
@@ -233,6 +281,25 @@ void Lexer::Load(std::istream& inStream)
         }
     }
     std::cout << "Read all tokens";
+}
+
+bool Lexer::DidScanMultiCharToken(Token& ioToken, const std::string& inString)
+{
+    bool result = false;
+    do
+    {
+        if (ioToken.mTokenKind != TokenKind::LESS)
+        {
+            break;
+        }
+        if (inString == "<>")
+        {
+            ioToken.mTokenKind = TokenKind::NOTEQUAL;
+            result = true;
+        }
+    } while (false);
+    
+    return result;
 }
 
 Token Lexer::ScanNextToken()
@@ -267,34 +334,13 @@ Token Lexer::ScanNextToken()
             break;
         }
 
-        const std::string charString = {c};
-        // Not a keyword/alphanumerical
-        token = {StringToTokenKind(charString), mLineNumber};
-        token.mLexeme = charString;
-        mBufferInput.GetChar();
-
-        if (token.mTokenKind != TokenKind::LESS)
+        if (!std::isalnum(c))
         {
+            const std::string specialString = ScanForStringSpecial();
+            token = TokenFromStringSpecial(specialString);
+            //token.mLexeme = (std::string{c});  
             break;
         }
-
-        // LESS Token is special since it can represent LESS or the first half of a NOTEQUAL Token
-        isEOF = ScanSpace();
-        if (isEOF)
-        {
-            break;
-        }
-
-        c = mBufferInput.PeekChar();
-        if (c != '>')
-        {
-            break;
-        }
-
-        // Special NOTEQUAL Token case encountered
-        mBufferInput.GetChar();
-        token = {TokenKind::NOTEQUAL, mLineNumber};
-        token.mLexeme = "<>";
 
     } while (false);
 

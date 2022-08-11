@@ -3,14 +3,8 @@
 namespace cse340 {
 namespace project4 {
 
-using KeywordDict = std::map<std::string, TokenKind>;
-
-Token::Token(TokenKind inTokenKind, int inLineNumber) :
-    mTokenKind{inTokenKind},
-    mLineNumber{inLineNumber}
-{
-
-}
+/// Prefer std::unordered_map over std::map as we don't need any sorted order of keys
+using KeywordDict = std::unordered_map<std::string, TokenKind>;
 
 const KeywordDict& Token::GetKeywordDict()
 {

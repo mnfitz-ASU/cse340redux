@@ -49,12 +49,14 @@
         "xstddef": "cpp",
         "xstring": "cpp",
         "xtr1common": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "unordered_map": "cpp",
+        "xhash": "cpp"
     },
     "cmake.debugConfig": 
 	{
         "args": [
-            "C:/Users/mn-fi/Projects/git/cse340redux/new/tests/test2.txt"
+            "C:/Users/mn-fi/Projects/git/cse340redux/new/tests/test29.txt"
 			]
 	}
 }
