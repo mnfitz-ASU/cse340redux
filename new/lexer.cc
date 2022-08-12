@@ -305,7 +305,8 @@ Token Lexer::ScanNextToken()
             break;
         }
 
-        std::string specialString{1, specialChar1};
+        //std::string specialString{specialChar1, 1};
+        std::string specialString = {specialChar1};
         token = TokenFromStringSpecial(specialString);
 
         // Yuck. Have to deal with (special case) multichar tokens
