@@ -198,8 +198,7 @@ Token Lexer::TokenFromStringSpecial(const std::string& inSpecial)
 {
     Token result{TokenKind::ERROR};
 
-    const std::string specialString = {inSpecial};
-    const TokenKind tokenKind = StringToTokenKind(specialString);
+    const TokenKind tokenKind = StringToTokenKind(inSpecial);
     
     if (tokenKind != TokenKind::ERROR)
     {
@@ -306,7 +305,7 @@ Token Lexer::ScanNextToken()
             break;
         }
 
-        std::string specialString = {specialChar1};
+        std::string specialString{1, specialChar1};
         token = TokenFromStringSpecial(specialString);
 
         // Yuck. Have to deal with (special case) multichar tokens

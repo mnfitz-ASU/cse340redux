@@ -49,7 +49,9 @@ private:
     const std::istream& GetStream() const;
 
 private:
-    std::istream* mStream{nullptr}; // We own the stream to prevent unexpected deletions
+    /// Pointer to the current stream.
+    /// Can be nullptr if no stream is provided
+    std::istream* mStream{nullptr};
     /// Holds chars put back into the stream to be read later
     std::vector<char> mUngetBuffer{};
 };
