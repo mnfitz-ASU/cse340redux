@@ -143,6 +143,34 @@ std::string Lexer::ScanForStringAlpha()
     return result;
 }
 
+char Lexer::ScanForCharSpecial()
+{
+    char result = InputBuffer::kEOF;
+    do    
+    {
+        bool isEOF = ScanSpace();
+        if (isEOF)
+        {
+            break;
+        }
+
+        const char c = mBufferInput.PeekChar();
+        if (c == InputBuffer::kEOF)
+        {
+            break;
+        }
+
+        if (std::isalpha(c) || std::isdigit(c) || std::isspace(c))
+        {
+            break;
+        }
+
+        result = mBufferInput.GetChar();
+
+    } while (false);
+    return result;
+}
+
 Token Lexer::TokenFromStringDigit(const std::string& inDigits)
 {
     Token result{};
@@ -169,13 +197,15 @@ Token Lexer::TokenFromStringAlpha(const std::string& inAlpha)
 Token Lexer::TokenFromStringSpecial(const std::string& inSpecial)
 {
     Token result{TokenKind::ERROR};
-    TokenKind tokenKind = StringToTokenKind(inSpecial);
+
+    const TokenKind tokenKind = StringToTokenKind(inSpecial);
+    
     if (tokenKind != TokenKind::ERROR)
     {
         result.mTokenKind = tokenKind;
-        result.mLexeme = inSpecial;
-        result.mLineNumber = mLineNumber;
+        result.mLexeme = inSpecial; 
     }
+    result.mLineNumber = mLineNumber;
     return result;
 }
 
@@ -185,7 +215,7 @@ void Lexer::PrintTokenList()
     ::PrintTokenList(mTokenList);
 }
 
-Token Lexer::Peek(int inLength)
+Token Lexer::PeekToken(int inLength)
 {
     if (inLength <= 0) 
     {  
@@ -208,7 +238,7 @@ Token Lexer::Peek(int inLength)
         
 }
 
-Token Lexer::Get()
+Token Lexer::GetToken()
 {
     Token token{};
     const bool isListEmpty = mTokenList.empty();
@@ -249,7 +279,7 @@ Token Lexer::ScanNextToken()
             break;
         }
 
-        char c = mBufferInput.PeekChar();
+        const char c = mBufferInput.PeekChar();
 
         if (std::isdigit(c))
         {
@@ -267,34 +297,45 @@ Token Lexer::ScanNextToken()
             break;
         }
 
-        const std::string charString = {c};
-        // Not a keyword/alphanumerical
-        token = {StringToTokenKind(charString), mLineNumber};
-        token.mLexeme = charString;
-        mBufferInput.GetChar();
-
-        if (token.mTokenKind != TokenKind::LESS)
+        // single char operators; eg. LESS
+        const char specialChar1 = ScanForCharSpecial();
+        if (specialChar1 == InputBuffer::kEOF)
         {
+            // Not a EOF and not a known character
             break;
         }
 
-        // LESS Token is special since it can represent LESS or the first half of a NOTEQUAL Token
+        //std::string specialString{specialChar1, 1};
+        std::string specialString = {specialChar1};
+        token = TokenFromStringSpecial(specialString);
+
+        // Yuck. Have to deal with (special case) multichar tokens
+        // which alias to one another; For instance LESS and NOTEQUAL (< , <>)
+        // Lookahead for double char operators; eg. NOTEQUAL
+
         isEOF = ScanSpace();
         if (isEOF)
         {
+            // No multichar token found
             break;
         }
 
-        c = mBufferInput.PeekChar();
-        if (c != '>')
+        const char specialChar2 = ScanForCharSpecial();
+        if (specialChar2 == InputBuffer::kEOF)
         {
             break;
         }
 
-        // Special NOTEQUAL Token case encountered
-        mBufferInput.GetChar();
-        token = {TokenKind::NOTEQUAL, mLineNumber};
-        token.mLexeme = "<>";
+        specialString += specialChar2;
+
+        Token multiToken = TokenFromStringSpecial(specialString);
+        if (multiToken.mTokenKind == TokenKind::ERROR)
+        {
+            mBufferInput.UngetChar(specialChar2);
+            break;
+        }
+
+        token = multiToken;
 
     } while (false);
 

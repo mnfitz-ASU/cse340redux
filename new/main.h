@@ -10,9 +10,12 @@
 
 namespace cse340 {
 
-class MainProgram // MainProgram utilizes NVI (Non-Virtual Interface) architecture https://en.wikipedia.org/wiki/Non-virtual_interface_pattern
+ // MainProgram utilizes NVI (Non-Virtual Interface) architecture 
+ // https://en.wikipedia.org/wiki/Non-virtual_interface_pattern
+class MainProgram
 {
 public:
+    /// Creates and returns a unique pointer to the main program 
     static std::unique_ptr<MainProgram> Make();
 
     virtual ~MainProgram() = default;

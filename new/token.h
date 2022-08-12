@@ -3,11 +3,13 @@
 
 // std
 #include <string>
-#include <map>
+#include <unordered_map>
 
 namespace cse340 {
 namespace project4 {
 
+/// Holds the complete list of every possibl tokenType we can recognize
+/// Changes with each project
 enum class TokenKind
 { 
     // Change me for every new assignment
@@ -21,7 +23,7 @@ enum class TokenKind
 };
 
 // Define my own Keyword Dictionary type
-using KeywordDict = std::map<std::string, TokenKind>;
+using KeywordDict = std::unordered_map<std::string, TokenKind>;
 
 class Token 
 {
@@ -32,14 +34,26 @@ public:
     //Token() = delete; // No default ctor()
     Token(TokenKind inTokenKind = TokenKind::ERROR, int inLineNumber = -1); // Alt ctor
 
+    /// Print the contents of the token
     void Print();    
 
+    /// Returns reference to the dictionary of TokenKinds
+    /// and their corresponding string representation
+    /// This function gets updated every new project or set of keywords
     static const KeywordDict& GetKeywordDict();
 
+public:
     TokenKind mTokenKind{TokenKind::END_OF_FILE}; 
     int mLineNumber{-1};
     std::string mLexeme{""};
 };
+
+inline Token::Token(TokenKind inTokenKind, int inLineNumber) :
+    mTokenKind{inTokenKind},
+    mLineNumber{inLineNumber}
+{
+    // Nothing to do
+}
 
 } // namespace project4
 
