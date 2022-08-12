@@ -41,7 +41,7 @@ private:
     std::string ScanForStringAlpha();
 
     /// Reads the input stream for special characters and returns the special string
-    std::string ScanForStringSpecial();
+    char ScanForCharSpecial();
 
     /// Creates a NUM token using the string as its lexeme
     Token TokenFromStringDigit(const std::string& inDigits);
@@ -51,15 +51,11 @@ private:
 
     /// Creates a keyword token if the string corresponds to a tokenKind. 
     /// Returns an ERROR token if no TokenKind corresponds to that string
-    Token TokenFromStringSpecial(const std::string& inSpecial);
-
-    /// Reads the next char and determines if the current token is a multi-char token
-    /// Modify the TokenKind of ioToken and return true if ioToken has been modified
-    bool DidScanMultiCharToken(Token& ioToken, char inChar);
+    Token TokenFromStringSpecial(std::string inSpecial);
 
     /// Reads the next char and determines if the current token is a multi-char token
     /// Modify the TokenKind of ioToken and return true if ioToken has been modified    
-    bool DidScanMultiCharToken(Token& ioToken, const std::string& inString);
+    static bool TokenFromStringSpecial(Token& ioToken, std::string& ioString);
 
     /// Reads the next token from input
     Token ScanNextToken();

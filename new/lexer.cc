@@ -143,32 +143,31 @@ std::string Lexer::ScanForStringAlpha()
     return result;
 }
 
-std::string Lexer::ScanForStringSpecial()
+char Lexer::ScanForCharSpecial()
 {
-    std::string result = "";
-    for (;;)
+    char result = InputBuffer::kEOF;
+    do    
     {
-        
         bool isEOF = ScanSpace();
         if (isEOF)
         {
             break;
         }
 
-        const char c = mBufferInput.GetChar();
+        const char c = mBufferInput.PeekChar();
         if (c == InputBuffer::kEOF)
         {
             break;
         }
 
-        if (std::isalpha(c) || std::isdigit(c))
+        if (std::isalpha(c) || std::isdigit(c) || std::isspace(c))
         {
-            mBufferInput.UngetChar(c);
             break;
         }
 
-        result += c;
-    }
+        result = mBufferInput.GetChar();
+
+    } while (false);
     return result;
 }
 
@@ -195,35 +194,19 @@ Token Lexer::TokenFromStringAlpha(const std::string& inAlpha)
     return result;
 }
 
-Token Lexer::TokenFromStringSpecial(const std::string& inSpecial)
+Token Lexer::TokenFromStringSpecial(std::string inSpecial)
 {
     Token result{TokenKind::ERROR};
-    TokenKind tokenKind = StringToTokenKind(inSpecial);
+
+    const std::string specialString = {inSpecial};
+    const TokenKind tokenKind = StringToTokenKind(specialString);
+    
     if (tokenKind != TokenKind::ERROR)
     {
         result.mTokenKind = tokenKind;
-        result.mLexeme = inSpecial;
-        result.mLineNumber = mLineNumber;
+        result.mLexeme = inSpecial; 
     }
-    else
-    {
-        int i = inSpecial.length();
-        for (; i > 1; i--)
-        {
-            // Check the string of all special chars for multichars in descending length
-            std::string subString = inSpecial.substr(0,i);
-            const bool foundMultichar = DidScanMultiCharToken(result, subString);
-            if (foundMultichar)
-            {
-                // multichar is found and token is updated
-                result.mLexeme = subString;
-                break;
-            }
-        }     
-        // After finding the longest matching multichar, be sure to unget any remaining characters that didn't match
-        std::string leftoverChars = inSpecial.substr(i, inSpecial.length());
-        mBufferInput.UngetString(leftoverChars);
-    }
+    result.mLineNumber = mLineNumber;
     return result;
 }
 
@@ -283,22 +266,28 @@ void Lexer::Load(std::istream& inStream)
     std::cout << "Read all tokens";
 }
 
-bool Lexer::DidScanMultiCharToken(Token& ioToken, const std::string& inString)
+bool Lexer::TokenFromStringSpecial(Token& ioToken, std::string& ioString)
 {
     bool result = false;
-    do
+
+    int i = ioString.length();
+    for (; i > 1; i--)
     {
         if (ioToken.mTokenKind != TokenKind::LESS)
         {
             break;
         }
-        if (inString == "<>")
+        // Check the string of all special chars for multichars in descending length
+        std::string subString = ioString.substr(0,i);            
+        if (subString == "<>")
         {
             ioToken.mTokenKind = TokenKind::NOTEQUAL;
+            ioToken.mLexeme = subString;
             result = true;
+            break;
         }
-    } while (false);
-    
+    }     
+    ioString = ioString.substr(ioString.length()-i, ioString.length());
     return result;
 }
 
@@ -316,7 +305,7 @@ Token Lexer::ScanNextToken()
             break;
         }
 
-        char c = mBufferInput.PeekChar();
+        const char c = mBufferInput.PeekChar();
 
         if (std::isdigit(c))
         {
@@ -334,13 +323,46 @@ Token Lexer::ScanNextToken()
             break;
         }
 
-        if (!std::isalnum(c))
+        // single char operators; eg. LESS
+        const char specialChar1 = ScanForCharSpecial();
+        if (specialChar1 == InputBuffer::kEOF)
         {
-            const std::string specialString = ScanForStringSpecial();
-            token = TokenFromStringSpecial(specialString);
-            //token.mLexeme = (std::string{c});  
+            // Not a EOF and not a known character
             break;
         }
+
+        std::string specialString = {specialChar1};
+        token = TokenFromStringSpecial(specialString);
+
+        // Yuck. Have to deal with (special case) multichar tokens
+        // which alias to one another; For instance LESS and NOTEQUAL (< , <>)
+        // Lookahead for double char operators; eg. NOTEQUAL
+
+        isEOF = ScanSpace();
+        if (isEOF)
+        {
+            // Nothing to read, return an empty token
+            token = {TokenKind::END_OF_FILE, mLineNumber};
+            token.mLexeme = "";
+            break;
+        }
+
+        const char specialChar2 = ScanForCharSpecial();
+        if (specialChar2 == InputBuffer::kEOF)
+        {
+            break;
+        }
+
+        specialString += specialChar2;
+
+        Token multiToken = TokenFromStringSpecial(specialString);
+        if (multiToken.mTokenKind == TokenKind::ERROR)
+        {
+            mBufferInput.UngetChar(specialChar2);
+            break;
+        }
+
+        token = multiToken;
 
     } while (false);
 
