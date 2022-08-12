@@ -37,9 +37,12 @@ public:
     /// Print the contents of the token
     void Print();    
 
-    /// Safely passes the dictionary of TokenKinds and their corresponding strings
+    /// Returns reference to the dictionary of TokenKinds
+    /// and their corresponding string representation
+    /// This function gets updated every new project or set of keywords
     static const KeywordDict& GetKeywordDict();
 
+public:
     TokenKind mTokenKind{TokenKind::END_OF_FILE}; 
     int mLineNumber{-1};
     std::string mLexeme{""};

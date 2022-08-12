@@ -26,21 +26,24 @@ public:
     /// Read the next token from |mTokenList| and consume it
     Token GetToken();
 
-    /// Print the contents of every token stored in mTokenList
+    /// Print the contents of every token stored in |mTokenList|
     void PrintTokenList();
     
 private:
     /// Advances through the input stream until a non-whitespace char or EOF is found. 
-    /// Returns true if EOF is reached.
+    /// Returns true if EOF is reached or there are no digits to read.
     bool ScanSpace();
 
     /// Reads the input stream for digit characters and returns the digit string
+    /// If there are no digit chars to read, returns empty string
     std::string ScanForStringDigits();
 
     /// Reads the input stream for alpha characters and returns the alpha string
+    /// If there are no alpha chars to read, returns empty string
     std::string ScanForStringAlpha();
 
-    /// Reads the input stream for special characters and returns the special string
+    /// Reads the input stream for and returns the first special char encountered
+    /// If there are no special chars to read, returns kEOF (-1)
     char ScanForCharSpecial();
 
     /// Creates a NUM token using the string as its lexeme
@@ -51,11 +54,7 @@ private:
 
     /// Creates a keyword token if the string corresponds to a tokenKind. 
     /// Returns an ERROR token if no TokenKind corresponds to that string
-    Token TokenFromStringSpecial(std::string inSpecial);
-
-    /// Reads the next char and determines if the current token is a multi-char token
-    /// Modify the TokenKind of ioToken and return true if ioToken has been modified    
-    static bool TokenFromStringSpecial(Token& ioToken, std::string& ioString);
+    Token TokenFromStringSpecial(const std::string& inSpecial);
 
     /// Reads the next token from input
     Token ScanNextToken();

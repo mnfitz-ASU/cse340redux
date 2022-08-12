@@ -40,17 +40,15 @@ public:
     void Reset(std::istream* inStream = nullptr);
 
 private:
-    /// Safely access the contents of |mStream| 
+    /// Return 'const' reference to current stream
     /// Throws a std::runtime_exception if stream is not provided
     std::istream& GetStream();
 
-    /// Safely access the contents of mStream without modifying its value
+    /// Return 'const' reference to current stream without modifying its value
     /// Throws a std::runtime_exception if stream is not provided
     const std::istream& GetStream() const;
 
 private:
-    // TRICKY: mFileStream must be declared first due to ctor initilization behaviors
-    /// Holds all input chars to be read as tokens
     std::istream* mStream{nullptr}; // We own the stream to prevent unexpected deletions
     /// Holds chars put back into the stream to be read later
     std::vector<char> mUngetBuffer{};

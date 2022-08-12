@@ -194,7 +194,7 @@ Token Lexer::TokenFromStringAlpha(const std::string& inAlpha)
     return result;
 }
 
-Token Lexer::TokenFromStringSpecial(std::string inSpecial)
+Token Lexer::TokenFromStringSpecial(const std::string& inSpecial)
 {
     Token result{TokenKind::ERROR};
 
@@ -264,31 +264,6 @@ void Lexer::Load(std::istream& inStream)
         }
     }
     std::cout << "Read all tokens";
-}
-
-bool Lexer::TokenFromStringSpecial(Token& ioToken, std::string& ioString)
-{
-    bool result = false;
-
-    int i = ioString.length();
-    for (; i > 1; i--)
-    {
-        if (ioToken.mTokenKind != TokenKind::LESS)
-        {
-            break;
-        }
-        // Check the string of all special chars for multichars in descending length
-        std::string subString = ioString.substr(0,i);            
-        if (subString == "<>")
-        {
-            ioToken.mTokenKind = TokenKind::NOTEQUAL;
-            ioToken.mLexeme = subString;
-            result = true;
-            break;
-        }
-    }     
-    ioString = ioString.substr(ioString.length()-i, ioString.length());
-    return result;
 }
 
 Token Lexer::ScanNextToken()
