@@ -315,9 +315,7 @@ Token Lexer::ScanNextToken()
         isEOF = ScanSpace();
         if (isEOF)
         {
-            // Nothing to read, return an empty token
-            token = {TokenKind::END_OF_FILE, mLineNumber};
-            token.mLexeme = "";
+            // No multichar token found
             break;
         }
 
