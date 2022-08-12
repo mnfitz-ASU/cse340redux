@@ -40,7 +40,7 @@ public:
     void Reset(std::istream* inStream = nullptr);
 
 private:
-    /// Return 'const' reference to current stream
+    /// Return reference to current stream
     /// Throws a std::runtime_exception if stream is not provided
     std::istream& GetStream();
 
