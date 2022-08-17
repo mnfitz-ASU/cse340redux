@@ -61,7 +61,8 @@ TokenKind StringToTokenKind(const std::string& inString)
         std::string key = "";
         for (char c : inString)
         {
-            key += std::toupper(c);
+            const int upper = std::toupper(c);
+            key += static_cast<char>(upper);
         }
 
         const auto value = Token::GetKeywordDict().find(key);
@@ -223,8 +224,8 @@ Token Lexer::PeekToken(int inLength)
         throw std::runtime_error{__FUNCTION__  ":Error: non positive argument\n"};    
     }
 
-    const int index = mIndex + inLength - 1;
-    const bool isOutOfBounds = (index > static_cast<int>((mTokenList.size())-1));
+    const std::size_t index = static_cast<std::size_t>(mIndex + inLength - 1);
+    const bool isOutOfBounds = (index > mTokenList.size()-1);
     if (isOutOfBounds) 
     { // if peeking too far
         Token token{};                        

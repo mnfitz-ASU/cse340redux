@@ -1,17 +1,69 @@
-// cse340
+// self
 #include "main.h"
-//#include "assignment4.h"
 
+// cse340
+#include "parser.h"
+
+// std
+#include <fstream>
 #include <iostream>
 #include <stdexcept>
+
+namespace /*annonymous*/ { 
+// Anonymous namespace 
+// Use for non-exported (private to this file) entities
+// https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf22-use-an-unnamed-anonymous-namespace-for-all-internalnon-exported-entities
+
+using namespace cse340;
+
+class MyMainProgram : public cse340::MainProgram // is-a cse340::MainProgram
+{
+private:
+    // OnRun() override
+    // Override of virtual method defined in cse340::MainProgram
+    // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#c128-virtual-functions-should-specify-exactly-one-of-virtual-override-or-final
+	int OnRun(int argc, char* argv[]) override 
+    {
+		char* possibleFilename = nullptr;
+		const bool hasPossibleFilenameArg = (argc >= 2);
+		if (hasPossibleFilenameArg)
+		{
+			// assume the last command line arg is a filename
+			const int lastCommandLineArg = argc - 1;
+			possibleFilename = argv[lastCommandLineArg];
+		}
+		// try to open the last command line arg as a file
+		std::fstream fileStream{possibleFilename}; 
+		// use the stream to the file as input else read from std::cin
+		std::istream& stream = (fileStream ? fileStream : std::cin);
+
+		Parser parser{};
+		parser.ParseProgram(stream);
+		
+		std::cout << "We did something! " << argv[0] << "\n";
+	    return 0;
+    }
+};
+
+} // namespace /*anonymous*/
+
+namespace cse340 {
+    
+/*static*/ std::unique_ptr<MainProgram> MainProgram::Make()
+{
+    auto mainProgram = std::make_unique<MyMainProgram>();
+    return mainProgram;
+}
+
+} // namespace cse340
 
 int main(int argc, char* argv[])
 {
     int result = 0;
     try
     {
-        auto mainProgram = cse340::MainProgram::Make();
-        result = mainProgram->Run(argc, argv);
+        MyMainProgram mainProgram{};
+        result = mainProgram.Run(argc, argv);
     }
     catch (const std::runtime_error& inException)
     {

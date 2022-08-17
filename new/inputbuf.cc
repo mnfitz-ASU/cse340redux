@@ -31,7 +31,8 @@ char InputBuffer::PeekChar()
             break;
         }
 
-        result = GetStream().peek();
+        const int peek = GetStream().peek();
+        result = static_cast<char>(peek);
         if (result == EOF)
         {
             result = kEOF;
@@ -63,7 +64,9 @@ char InputBuffer::GetChar()
             result = kEOF;
             break;
         }
-        result = GetStream().get();
+
+        const int get = GetStream().get();
+        result = static_cast<char>(get);
 
     } while (false);
 
