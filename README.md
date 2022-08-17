@@ -77,14 +77,12 @@
   </ol>
 </details>
 
-
-
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-The CSE 340 Summer Project to see if I can improve upon my code and Dr. Bazzi's code. The goal of this is to create more robust and professional code rather than code that is just passable.
+The CSE 340 Summer Project to see if I can improve upon my code and Dr. Bazzi's code. The goal of this is to create more robust and professional code rather than code that is just passable. The difficulty and frustration with debugging using std::in was our primary motivator for this project. It was very difficult to debug in IDE, so we wanted to rework the code to simplify it.
 * Researching the provided CSE 340 Code, `class InputBuffer` could be replaced by using `std::istream`
 *		It looks like InputBuffer was needed to support ungetChar(), but std::istream already provides this
 * `class LexicalAnalyzer` has `enum TokenType` which varies between each project
@@ -95,7 +93,12 @@ The CSE 340 Summer Project to see if I can improve upon my code and Dr. Bazzi's 
 *		Make `LexicalAnalyzer::GetTokenMain()` a public method that takes a `std::istream&` as input parameter,
 *		and rename it to `LexicalAnalyzer::ScanInputStream(std::istream& ioStream)`
 *		Add `LexicalAnalyzer` method and name it `IsAtEOF()` which returns true if the tokenList is empty
-
+* Goals:
+*   Add ability to read from file stream instead of std::in
+*   Minimize the number of source files that must be updated as keywords change for each assignment
+*   Apply modern c++11 techniques as referenced by the c++ Core Guidelines to the design and implementation
+*   Namespaces, RAII using std::unique_ptr instead of new and delete, NVI where applicable, exceptions and 
+    try-catch instead of exit, develop good const variable and method habits
  `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
 
 <p align="right">(<a href="#top">back to top</a>)</p>
