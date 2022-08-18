@@ -110,20 +110,54 @@ void InputBuffer::Reset(std::istream* inStream)
 
 std::istream& InputBuffer::GetStream()
 {
-    if (mStream == nullptr)
-    {
-        throw std::runtime_error{__FUNCTION__ ":ERROR: Trying to access mStream while null\n"};
-    }
-    return *mStream;
+    std::istream* stream = nullptr;
+    do
+    {  
+        if (mStream == nullptr)
+        {
+            stream = &std::cin;
+            break;
+        }
+
+        //const bool isValid = static_cast<bool>(*mStream);
+        const bool isValid = mStream->operator bool();
+        if (isValid)
+        {
+            stream = mStream;
+            break;
+        }
+        
+        throw std::runtime_error{__FUNCTION__ ":ERROR: Trying to access invalid stream\n"};
+
+    } while (false);
+
+    return *stream;
 }
 
 const std::istream& InputBuffer::GetStream() const
 {
-    if (mStream == nullptr)
-    {
-        throw std::runtime_error{__FUNCTION__ ":ERROR: Trying to access mStream while null\n"};
-    }
-    return *mStream;
+    std::istream* stream = nullptr;
+    do
+    {  
+        if (mStream == nullptr)
+        {
+            stream = &std::cin;
+            break;
+        }
+
+        //const bool isValid = static_cast<bool>(*mStream);
+        const bool isValid = mStream->operator bool();
+        if (isValid)
+        {
+            stream = mStream;
+            break;
+        }
+        
+        throw std::runtime_error{__FUNCTION__ ":ERROR: Trying to access invalid stream\n"};
+
+    } while (false);
+
+    return *stream;
 }
 
 } // namespace cse340

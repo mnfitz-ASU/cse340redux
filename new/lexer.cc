@@ -221,7 +221,7 @@ Token Lexer::PeekToken(int inLength)
     if (inLength <= 0) 
     {  
         // We need to throw an exception here because we cannot peek in place or to the left
-        throw std::runtime_error{__FUNCTION__  ":Error: non positive argument\n"};    
+        throw std::invalid_argument{__FUNCTION__  ":Error: non positive argument\n"};    
     }
 
     const std::size_t index = static_cast<std::size_t>(mIndex + inLength - 1);

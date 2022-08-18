@@ -65,8 +65,9 @@ int main(int argc, char* argv[])
         MyMainProgram mainProgram{};
         result = mainProgram.Run(argc, argv);
     }
-    catch (const std::runtime_error& inException)
+    catch (const std::exception& inException)
     {
+        // This exception is the base class for both std::runtime_error and std::logic_error
         // First print any what() message from known runtime error messages
         std::cerr << inException.what() << '\n';
         result = -1;

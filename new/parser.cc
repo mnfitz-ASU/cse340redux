@@ -21,6 +21,17 @@
 
 namespace cse340 {
 
+Token Parser::Expect(TokenKind inExpected)
+{
+    Token t = mLexer.GetToken();
+    if (t.mTokenKind != inExpected)
+	{
+		const std::string what = "Syntax error! '" + t.mLexeme + "' at line: " + std::to_string(t.mLineNumber);
+        throw ParserSyntaxException{what};
+	}
+    return t;
+}
+
 void Parser::ParseProgram(std::istream& inStream)
 {
 	mLexer.Load(inStream);
