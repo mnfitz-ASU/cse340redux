@@ -1,3 +1,10 @@
+/*
+ * Copyright (C) Matthew Fitzgerald, 2022
+ *
+ * CSE 340, Dr. Bazzi
+ * Do not share this file with anyone
+ */
+
 // self
 #include "main.h"
 
@@ -6,7 +13,6 @@
 
 // std
 #include <fstream>
-#include <iostream>
 #include <stdexcept>
 
 namespace /*annonymous*/ { 

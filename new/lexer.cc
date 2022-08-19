@@ -1,9 +1,17 @@
-// cse340
+/*
+ * Copyright (C) Matthew Fitzgerald, 2022
+ *
+ * CSE 340, Dr. Bazzi
+ * Do not share this file with anyone
+ */
+
+// self
 #include "lexer.h"
+
+// cse340
 #include "token.h"
 
 // std
-#include <array>
 #include <istream>
 #include <stdexcept>   // for exception, runtime_error, out_of_range
 
@@ -236,7 +244,6 @@ Token Lexer::PeekToken(int inLength)
     {
         return mTokenList.at(index);
     }
-        
 }
 
 Token Lexer::GetToken()

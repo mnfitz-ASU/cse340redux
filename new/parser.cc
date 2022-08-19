@@ -1,23 +1,15 @@
 /*
- * Copyright (C) Rida Bazzi, 2022
+ * Copyright (C) Matthew Fitzgerald, 2022
  *
+ * CSE 340, Dr. Bazzi
  * Do not share this file with anyone
- *
- * Do not post this file or derivatives of
- * of this file online
- *
  */
-// project 4
-#include "main.h"
+
+// self
 #include "parser.h"
 
-// std
-#include <algorithm>
-#include <cassert>
-#include <cstdlib>
-#include <fstream>
-#include <iostream>
-#include <tuple>
+// cse340
+#include "main.h"
 
 namespace cse340 {
 

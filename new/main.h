@@ -1,8 +1,12 @@
+/*
+ * Copyright (C) Matthew Fitzgerald, 2022
+ *
+ * CSE 340, Dr. Bazzi
+ * Do not share this file with anyone
+ */
+
 #ifndef MAIN_H
 #define MAIN_H
-
-// cse340
-//#include "execute.h"
 
 // std
 #include <assert.h>

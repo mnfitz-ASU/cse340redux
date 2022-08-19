@@ -1,13 +1,17 @@
-#include <iostream>
-#include <istream>
-#include <fstream>
-#include <vector>
-#include <string>
-#include <cstdio>
-#include <assert.h>
-#include <fstream>
+/*
+ * Copyright (C) Matthew Fitzgerald, 2022
+ *
+ * CSE 340, Dr. Bazzi
+ * Do not share this file with anyone
+ */
 
+// self
 #include "inputbuf.h"
+
+// std
+#include <istream>
+#include <string>
+#include <vector>
 
 namespace cse340 {
 
@@ -23,15 +27,14 @@ char InputBuffer::PeekChar()
             break;
         } 
 
-        // Else read new characters from the stream
-        if (GetStream().eof())
+        auto& stream = GetStream();
+        if (stream.eof())
         {
-            //assert(!"Nothing to read!");
             result = kEOF;
             break;
         }
 
-        const int peek = GetStream().peek();
+        const int peek = stream.peek();
         result = static_cast<char>(peek);
         if (result == EOF)
         {
@@ -57,15 +60,15 @@ char InputBuffer::GetChar()
             break;
         } 
 
-        // Else read new characters from the stream
-        if (GetStream().eof())
+        auto& stream = GetStream();
+        if (stream.eof())
         {
             //assert(!"Nothing to read!");
             result = kEOF;
             break;
         }
 
-        const int get = GetStream().get();
+        const int get = stream.get();
         result = static_cast<char>(get);
 
     } while (false);

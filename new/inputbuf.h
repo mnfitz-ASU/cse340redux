@@ -1,10 +1,15 @@
+/*
+ * Copyright (C) Matthew Fitzgerald, 2022
+ *
+ * CSE 340, Dr. Bazzi
+ * Do not share this file with anyone
+ */
 
-#ifndef INPUT_BUFFER
-#define INPUT_BUFFER
+#ifndef INPUT_BUFFER_H
+#define INPUT_BUFFER_H
 
+// std
 #include <iostream>
-#include <istream>
-#include <fstream>
 #include <string>
 #include <vector>
 
@@ -41,11 +46,13 @@ public:
 
 private:
     /// Return reference to current stream
-    /// Throws a std::runtime_exception if stream is not provided
+    /// Return std::cin if no steam provided via |Reset()|
+    /// Throws std::runtime_error if provided stream is invalid
     std::istream& GetStream();
 
-    /// Return 'const' reference to current stream without modifying its value
-    /// Throws a std::runtime_exception if stream is not provided
+    /// Return 'const' reference to current stream 
+    /// Return std::cin if no steam provided via |Reset()|
+    /// Throws std::runtime_error if provided stream is invalid
     const std::istream& GetStream() const;
 
 private:
@@ -58,4 +65,4 @@ private:
 
 } // namespace cse340
 
-#endif //INPUT_BUFFER
+#endif //INPUT_BUFFER_H

@@ -1,17 +1,17 @@
 /*
- * Copyright (C) Rida Bazzi, 2019
+ * Copyright (C) Matthew Fitzgerald, 2022
  *
+ * CSE 340, Dr. Bazzi
  * Do not share this file with anyone
  */
-#ifndef __PARSER_H__
-#define __PARSER_H__
 
-// project 4
+#ifndef PARSER_H
+#define PARSER_H
+
+// cse340
 #include "lexer.h"
 
-
 // std
-#include <list>
 #include <string>
 #include <vector>
 
@@ -54,4 +54,4 @@ public:
 
 } // namespace cse340
 
-#endif //__PARSER_H__
+#endif //PARSER_H
