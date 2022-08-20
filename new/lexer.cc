@@ -60,7 +60,7 @@ const std::string& TokenKindToString(TokenKind inTokenKind)
 
 TokenKind StringToTokenKind(const std::string& inString)
 {
-    TokenKind tokenKind = TokenKind::ERROR;
+    TokenKind tokenKind = TokenKind::kERROR;
     do
     {
         if (inString.empty())
@@ -87,18 +87,18 @@ TokenKind StringToTokenKind(const std::string& inString)
         if (std::isdigit(firstChar))
         {
             // We have found a NUM token. Crash if the NUM contains alpha chars
-            tokenKind = TokenKind::NUM;
+            tokenKind = TokenKind::kNUM;
             break;
         }
 
         if (std::isalpha(firstChar))
         {
             // We have found an ID token. IDs can contain digit chars, so no checks are required
-            tokenKind = TokenKind::ID;
+            tokenKind = TokenKind::kID;
             break;
         }
         
-        tokenKind = TokenKind::ERROR;
+        tokenKind = TokenKind::kERROR;
 
     } while (false);
     
@@ -186,7 +186,7 @@ Token Lexer::TokenFromStringDigit(const std::string& inDigits)
     Token result{};
     result.mLexeme = inDigits;
     result.mLineNumber = mLineNumber;
-    result.mTokenKind = TokenKind::NUM;
+    result.mTokenKind = TokenKind::kNUM;
     return result;
 }
 
@@ -194,9 +194,9 @@ Token Lexer::TokenFromStringAlpha(const std::string& inAlpha)
 {
     Token result{};
     TokenKind tokenKind = StringToTokenKind(inAlpha);
-    if (tokenKind == TokenKind::ERROR)
+    if (tokenKind == TokenKind::kERROR)
     {
-        tokenKind = TokenKind::ID;
+        tokenKind = TokenKind::kID;
     }
     result.mTokenKind = tokenKind;
     result.mLexeme = inAlpha;
@@ -206,11 +206,11 @@ Token Lexer::TokenFromStringAlpha(const std::string& inAlpha)
 
 Token Lexer::TokenFromStringSpecial(const std::string& inSpecial)
 {
-    Token result{TokenKind::ERROR};
+    Token result{TokenKind::kERROR};
 
     const TokenKind tokenKind = StringToTokenKind(inSpecial);
     
-    if (tokenKind != TokenKind::ERROR)
+    if (tokenKind != TokenKind::kERROR)
     {
         result.mTokenKind = tokenKind;
         result.mLexeme = inSpecial; 
@@ -266,7 +266,7 @@ void Lexer::Load(std::istream& inStream)
     {
         Token result = ScanNextToken();
         mTokenList.push_back(result);
-        if (result.mTokenKind == TokenKind::END_OF_FILE) 
+        if (result.mTokenKind == TokenKind::kEND_OF_FILE) 
         {
             break;
         }
@@ -276,14 +276,14 @@ void Lexer::Load(std::istream& inStream)
 
 Token Lexer::ScanNextToken()
 {
-    Token token{TokenKind::ERROR};
+    Token token{TokenKind::kERROR};
     do
     {
         bool isEOF = ScanSpace();
         if (isEOF)
         {
             // Nothing to read, return an empty token
-            token = {TokenKind::END_OF_FILE, mLineNumber};
+            token = {TokenKind::kEND_OF_FILE, mLineNumber};
             token.mLexeme = "";
             break;
         }
@@ -338,7 +338,7 @@ Token Lexer::ScanNextToken()
         specialString += specialChar2;
 
         Token multiToken = TokenFromStringSpecial(specialString);
-        if (multiToken.mTokenKind == TokenKind::ERROR)
+        if (multiToken.mTokenKind == TokenKind::kERROR)
         {
             mBufferInput.UngetChar(specialChar2);
             break;

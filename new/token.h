@@ -25,13 +25,13 @@ enum class TokenKind
     // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Renum-class
     // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Renum-caps    
     
-    END_OF_FILE = 0,
-    VAR, FOR, IF, WHILE, SWITCH, CASE, DEFAULT, INPUT, OUTPUT, ARRAY,
-    PLUS, MINUS, DIV, MULT,
-    EQUAL, COLON, COMMA, SEMICOLON,
-    LBRAC, RBRAC, LPAREN, RPAREN, LBRACE, RBRACE,
-    NOTEQUAL, GREATER, LESS,
-    NUM, ID, ERROR
+    kEND_OF_FILE = 0,
+    kVAR, kFOR, kIF, kWHILE, kSWITCH, kCASE, kDEFAULT, kINPUT, kOUTPUT, kARRAY,
+    kPLUS, kMINUS, kDIV, kMULT,
+    kEQUAL, kCOLON, kCOMMA, kSEMICOLON,
+    kLBRAC, kRBRAC, kLPAREN, kRPAREN, kLBRACE, kRBRACE,
+    kNOTEQUAL, kGREATER, kLESS,
+    kNUM, kID, kERROR
 };
 
 // Define my own Keyword Dictionary type
@@ -44,7 +44,7 @@ public:
 
 public:
     //Token() = delete; // No default ctor()
-    Token(TokenKind inTokenKind = TokenKind::ERROR, int inLineNumber = -1); // Alt ctor
+    Token(TokenKind inTokenKind = TokenKind::kERROR, int inLineNumber = -1); // Alt ctor
 
     /// Print the contents of the token
     void Print();    
@@ -55,7 +55,7 @@ public:
     static const KeywordDict& GetKeywordDict();
 
 public:
-    TokenKind mTokenKind{TokenKind::END_OF_FILE}; 
+    TokenKind mTokenKind{TokenKind::kEND_OF_FILE}; 
     int mLineNumber{-1};
     std::string mLexeme{""};
 };
