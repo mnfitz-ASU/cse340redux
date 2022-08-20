@@ -42,8 +42,25 @@ private:
         assert(!"Create your own OnRun method!");
         return -1;
     }
-
 }; // class MainProgram
+
+// Class related helper function
+// Returns pointer to last command line arg, or nullptr if no argument was provided
+inline char* GetLastCommandLineArg(int argc, char* argv[])
+{
+    char* filename = nullptr;
+
+    // we need at least 1 additional command line argument
+    const bool hasPossibleFilenameArg = (argc >= 2);
+    if (hasPossibleFilenameArg)
+    {
+        // assume the last command line arg is a filename
+        const int lastCommandLineArg = argc - 1;
+        filename = argv[lastCommandLineArg];
+    }
+
+    return filename;
+}
 
 } // namespace cse340
 

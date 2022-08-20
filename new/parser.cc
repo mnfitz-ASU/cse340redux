@@ -8,9 +8,6 @@
 // self
 #include "parser.h"
 
-// cse340
-#include "main.h"
-
 namespace cse340 {
 
 Token Parser::Expect(TokenKind inExpected)

@@ -31,14 +31,8 @@ private:
     // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#c128-virtual-functions-should-specify-exactly-one-of-virtual-override-or-final
 	int OnRun(int argc, char* argv[]) override 
     {
-		char* possibleFilename = nullptr;
-		const bool hasPossibleFilenameArg = (argc >= 2);
-		if (hasPossibleFilenameArg)
-		{
-			// assume the last command line arg is a filename
-			const int lastCommandLineArg = argc - 1;
-			possibleFilename = argv[lastCommandLineArg];
-		}
+		char* possibleFilename = GetLastCommandLineArg(argc, argv);
+		
 		// try to open the last command line arg as a file
 		std::fstream fileStream{possibleFilename}; 
 		// use the stream to the file as input else read from std::cin
