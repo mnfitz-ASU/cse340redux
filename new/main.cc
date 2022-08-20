@@ -19,6 +19,7 @@ namespace /*annonymous*/ {
 // Anonymous namespace 
 // Use for non-exported (private to this file) entities
 // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf22-use-an-unnamed-anonymous-namespace-for-all-internalnon-exported-entities
+// https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rs-unnamed
 
 using namespace cse340;
 

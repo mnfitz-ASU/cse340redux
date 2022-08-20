@@ -7,6 +7,8 @@
 
 #ifndef PARSER_H
 #define PARSER_H
+// Header include guard:
+// https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf8-use-include-guards-for-all-h-files
 
 // cse340
 #include "lexer.h"

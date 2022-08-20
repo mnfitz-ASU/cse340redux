@@ -7,6 +7,8 @@
 
 #ifndef TOKEN_H
 #define TOKEN_H
+// Header include guard:
+// https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf8-use-include-guards-for-all-h-files
 
 // std
 #include <string>
@@ -15,11 +17,14 @@
 namespace cse340 {
 namespace project4 {
 
-/// Holds the complete list of every possibl tokenType we can recognize
+/// Holds the complete list of every possible tokenType we can recognize
 /// Changes with each project
 enum class TokenKind
 { 
-    // Change me for every new assignment
+    // enum class: 
+    // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Renum-class
+    // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Renum-caps    
+    
     END_OF_FILE = 0,
     VAR, FOR, IF, WHILE, SWITCH, CASE, DEFAULT, INPUT, OUTPUT, ARRAY,
     PLUS, MINUS, DIV, MULT,

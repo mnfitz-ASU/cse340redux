@@ -18,7 +18,9 @@
 namespace { // annonymous namespace
 
 using namespace cse340;
-using TokenKind = project4::TokenKind;
+
+// Use 'const' where possible: 
+// https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#con1-by-default-make-objects-immutable
 
 // FWD decls
 void PrintToken(const Token& inToken);
@@ -107,7 +109,6 @@ TokenKind StringToTokenKind(const std::string& inString)
 
 namespace cse340 {
 
-// public
 std::string Lexer::ScanForStringDigits()
 {
     std::string result = "";
