@@ -86,14 +86,14 @@ TokenKind StringToTokenKind(const std::string& inString)
         const char firstChar = key.at(0);
         if (std::isdigit(firstChar))
         {
-            // We have found a NUM token. Crash if the NUM contains alpha chars
+            // We have found a NUM token.
             tokenKind = TokenKind::kNUM;
             break;
         }
 
         if (std::isalpha(firstChar))
         {
-            // We have found an ID token. IDs can contain digit chars, so no checks are required
+            // We have found an ID token. 
             tokenKind = TokenKind::kID;
             break;
         }

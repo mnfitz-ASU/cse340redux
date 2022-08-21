@@ -13,7 +13,12 @@ namespace project2 {
 enum class TokenKind
 { 
     // Change me for every new assignment
-    kEND_OF_FILE = 0, kARROW, kSTAR, kHASH, kID, kERROR
+    kEND_OF_FILE = 0, kARROW, kSTAR, kHASH, kID, kERROR, 
+    
+    // REVISIT mnfitz 20aug2022: Move kNum knowledge into token.cc
+    // Not all assignments use a kNUM token, so knowledge of 
+    // scanning kNUM should be moved into token.cc?
+    kNUM = kERROR // SUPERHACK
 };
 
 // Define my own Keyword Dictionary type
