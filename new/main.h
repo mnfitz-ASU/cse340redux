@@ -21,9 +21,11 @@ namespace cse340 {
 class MainProgram
 {
 public:
-    /// Creates and returns a unique pointer to the main program 
+    /// Factory method: Creates and returns a unique pointer to the main program 
     static std::unique_ptr<MainProgram> Make();
 
+    // Base class with virtual methods requires virtual dtor: 
+    // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#c35-a-base-class-destructor-should-be-either-public-and-virtual-or-protected-and-non-virtual
     virtual ~MainProgram() = default;
     
     // NVI: public non-virtual interface 

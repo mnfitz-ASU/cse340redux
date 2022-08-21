@@ -52,7 +52,8 @@
         "list": "cpp",
         "queue": "cpp",
         "map": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "cstdarg": "cpp"
     },
     "cmake.sourceDirectory": "${workspaceFolder}/project4redux"
 }

@@ -10,6 +10,10 @@
 // Header include guard:
 // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf8-use-include-guards-for-all-h-files
 
+//std
+#include <utility>
+#include <vector>
+
 namespace cse340 {
 
 enum class ArithmeticKind 
@@ -42,6 +46,10 @@ enum class InstructionKind
 class InstructionNode
 {
 public:
+    // Base class with virtual methods requires virtual dtor: 
+    // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#c35-a-base-class-destructor-should-be-either-public-and-virtual-or-protected-and-non-virtual
+    virtual ~InstructionNode() = default;
+
     // Execute this |InstructionNode| and return pointer 
     // to next |InstructionNode| to execute
     // Returns nullptr if there is no other instructions
@@ -52,6 +60,9 @@ public:
 
     // Return the next |InstructionNode| of this node
     InstructionNode* GetNext() const;
+
+    // Sets the next |InstructionNode| to follow this node in the program sequence 
+    void SetNext(InstructionNode* inNext);
 
 protected:
     InstructionNode(InstructionKind inKind); // alt ctor() can only be invoked by derived classes
@@ -85,6 +96,132 @@ inline InstructionNode* InstructionNode::GetNext() const
 {
     return mNext;
 }
+
+inline void InstructionNode::SetNext(InstructionNode* inNext)
+{
+    mNext = inNext;
+}
+
+class AssignInstructionNode : public InstructionNode // is-a: InstructionNode
+{
+public:
+    AssignInstructionNode(ArithmeticKind inKind, int inLHSIndex, int inRHSIndex1, int inRHSIndex2) :
+        InstructionNode{InstructionKind::kASSIGN},
+        mLHSIndex{inLHSIndex},
+        mOperandIndex{inRHSIndex1, inRHSIndex2},
+        mOp{inKind}
+    {   
+        // Nothing to do
+    }
+
+private:
+    InstructionNode* OnExecute() const override;
+
+private:
+    int mLHSIndex{-1};
+    std::pair<int, int> mOperandIndex{-1, -1};
+    ArithmeticKind mOp{ArithmeticKind::kOPERATOR_NONE};
+};
+
+class NoopInstructionNode : public InstructionNode // is-a: InstructionNode
+{
+public:
+    NoopInstructionNode() :
+        InstructionNode{InstructionKind::kNOOP}
+    {   
+        // Nothing to do
+    }
+
+private:
+    InstructionNode* OnExecute() const override;
+};
+
+class InputInstructionNode : public InstructionNode // is-a: InstructionNode
+{
+public:
+    InputInstructionNode(int inInputIndex) :
+        InstructionNode{InstructionKind::kIN},
+        mInputIndex{inInputIndex}
+    {   
+        // Nothing to do
+    }
+
+private:
+    InstructionNode* OnExecute() const override;
+
+private:
+    int mInputIndex{-1};
+    static std::vector<int> sInputs;
+    static std::size_t sNextInput;
+};
+
+class OutputInstructionNode : public InstructionNode // is-a: InstructionNode
+{
+public:
+    OutputInstructionNode(int inOutputIndex) :
+        InstructionNode{InstructionKind::kOUT},
+        mOutputIndex{inOutputIndex}
+    {   
+        // Nothing to do
+    }
+
+private:
+    InstructionNode* OnExecute() const override;
+
+private:
+    int mOutputIndex{-1};
+};
+
+class CJumpInstructionNode : public InstructionNode // is-a: InstructionNode
+{
+public:
+    CJumpInstructionNode(ConditionKind inKind, int inRHSIndex1, int inRHSIndex2, InstructionNode* inTarget) :
+        InstructionNode{InstructionKind::kCJMP},
+        mOp{inKind},
+        mOperandIndex{inRHSIndex1, inRHSIndex2},
+        mTarget{inTarget}
+    {   
+        // Nothing to do
+    }
+
+    InstructionNode* GetTarget() const;
+    void SetTarget(InstructionNode* inTarget);
+
+private:
+    InstructionNode* OnExecute() const override;
+
+private:
+    InstructionNode* mTarget;
+    std::pair<int, int> mOperandIndex{-1, -1};
+    ConditionKind mOp{ConditionKind::kCONDITION_NOTEQUAL};
+};
+
+inline InstructionNode* CJumpInstructionNode::GetTarget() const
+{
+    return mTarget;
+}
+
+inline void CJumpInstructionNode::SetTarget(InstructionNode* inTarget)
+{
+    mTarget = inTarget;
+}
+
+class JumpInstructionNode : public InstructionNode // is-a: InstructionNode
+{
+public:
+    JumpInstructionNode(InstructionNode* inTarget) :
+        InstructionNode{InstructionKind::kJMP},
+        mTarget{inTarget}
+    {   
+        // Nothing to do
+    }
+
+private:
+    InstructionNode* OnExecute() const override;
+
+private:
+    InstructionNode* mTarget;
+};
 
 // Executes the linked list of InstructionNodes provided by |inProgram|
 void ExecuteProgram(InstructionNode* inProgram);
