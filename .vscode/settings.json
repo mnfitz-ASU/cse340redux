@@ -1,6 +1,10 @@
 {
-    "makefile.extensionOutputFolder": "./.vscode",
     "files.associations": {
+        "tuple": "cpp",
+        "iostream": "cpp",
+        "xtree": "cpp",
+        "algorithm": "cpp",
+        "array": "cpp",
         "atomic": "cpp",
         "bit": "cpp",
         "cctype": "cpp",
@@ -16,13 +20,15 @@
         "ctime": "cpp",
         "cwchar": "cpp",
         "exception": "cpp",
+        "fstream": "cpp",
         "initializer_list": "cpp",
         "ios": "cpp",
         "iosfwd": "cpp",
-        "iostream": "cpp",
         "istream": "cpp",
         "iterator": "cpp",
         "limits": "cpp",
+        "list": "cpp",
+        "map": "cpp",
         "memory": "cpp",
         "new": "cpp",
         "ostream": "cpp",
@@ -30,7 +36,6 @@
         "streambuf": "cpp",
         "string": "cpp",
         "system_error": "cpp",
-        "tuple": "cpp",
         "type_traits": "cpp",
         "typeinfo": "cpp",
         "utility": "cpp",
@@ -45,15 +50,13 @@
         "xstring": "cpp",
         "xtr1common": "cpp",
         "xutility": "cpp",
-        "algorithm": "cpp",
-        "array": "cpp",
-        "deque": "cpp",
-        "fstream": "cpp",
-        "list": "cpp",
-        "queue": "cpp",
-        "map": "cpp",
-        "xtree": "cpp",
-        "cstdarg": "cpp"
+        "unordered_map": "cpp",
+        "xhash": "cpp"
     },
-    "cmake.sourceDirectory": "${workspaceFolder}/project4redux"
+    "cmake.debugConfig": 
+	{
+        "args": [
+            "C:/Users/mn-fi/Projects/git/cse340redux/tests/test29.txt"
+			]
+	}
 }

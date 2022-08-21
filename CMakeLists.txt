@@ -10,7 +10,24 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 # c++ language version level: c++11
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(a.out main.cc parser.cc lexer.cc inputbuf.cc token.cc execute.cc)
+# Uncomment the version of project to build
+set(    ThisProject 
+        #"project1"
+        #"project2"
+        #"project3"
+        "project4"
+    )
+# Add the project specific include path
+include_directories(${PROJECT_SOURCE_DIR}/${ThisProject})
+
+# define a.out as being composed of these source files
+add_executable( a.out
+                main.cc 
+                parser.cc 
+                lexer.cc 
+                inputbuf.cc 
+                ${ThisProject}/token.cc 
+                execute.cc)
 
 # Xcode specific compiler settings
 if ( CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU" )

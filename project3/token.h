@@ -1,19 +1,35 @@
+/*
+ * Copyright (C) Matthew Fitzgerald, 2022
+ *
+ * CSE 340, Dr. Bazzi
+ * Do not share this file with anyone
+ */
+
 #ifndef TOKEN_H
 #define TOKEN_H
+// Header include guard:
+// https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf8-use-include-guards-for-all-h-files
 
 // std
 #include <string>
 #include <unordered_map>
 
 namespace cse340 {
-namespace project2 {
+namespace project3 {
 
-/// Holds the complete list of every possibl tokenType we can recognize
+/// Holds the complete list of every possible tokenType we can recognize
 /// Changes with each project
 enum class TokenKind
 { 
-    // Change me for every new assignment
-    kEND_OF_FILE = 0, kARROW, kSTAR, kHASH, kID, kERROR
+    // enum class: 
+    // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Renum-class
+    // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Renum-caps    
+    
+    kEND_OF_FILE = 0,
+    kSCALAR, kARRAY, kOUTPUT, kPLUS, kMINUS, kDIV, kMULT,
+    kEQUAL, kSEMICOLON,
+    kLBRAC, kRBRAC, kLPAREN, kRPAREN, kLBRACE, kRBRACE,
+    kDOT, kNUM, kID, kERROR
 };
 
 // Define my own Keyword Dictionary type
@@ -49,12 +65,12 @@ inline Token::Token(TokenKind inTokenKind, int inLineNumber) :
     // Nothing to do
 }
 
-} // namespace project2
+} // namespace project3
 
-// REVIEW mnfitz 20aug2022: Bring project2 into cse340 scope
+// REVIEW mnfitz 20aug2022: Bring project3 into cse340 scope
 // Seems iffy for the header file to bring the project namespace into scope
 // Shouldn't the user of the header file do this in the .cc file
-using namespace project2;
+using namespace project3;
 
 } // namespace cse340
 
