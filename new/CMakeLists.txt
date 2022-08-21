@@ -12,6 +12,21 @@ set(CMAKE_CXX_STANDARD 11)
 
 add_executable(a.out main.cc parser.cc lexer.cc inputbuf.cc token.cc execute.cc)
 
+# Xcode specific compiler settings
+if ( CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU" )
+    target_compile_options(a.out PRIVATE -Wall -Wextra -Wunreachable-code -Wpedantic)
+endif()
+
+# Ubuntu (Linux) specific compile settings
+if ( CMAKE_CXX_COMPILER_ID MATCHES "Clang" )
+    target_compile_options(a.out PRIVATE -Wweak-vtables -Wexit-time-destructors -Wglobal-constructors -Wmissing-noreturn )
+endif()
+
+# Microsoft specific compile settings
+if ( CMAKE_CXX_COMPILER_ID MATCHES "MSVC" )
+    target_compile_options(a.out PRIVATE /Wall /wd4820 /wd4514 /D__STDC_WANT_SECURE_LIB__=1)
+endif()
+
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)

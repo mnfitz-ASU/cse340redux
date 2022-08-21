@@ -26,6 +26,7 @@ public:
 
     // Base class with virtual methods requires virtual dtor: 
     // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#c35-a-base-class-destructor-should-be-either-public-and-virtual-or-protected-and-non-virtual
+    // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#c127-a-class-with-a-virtual-function-should-have-a-virtual-or-protected-destructor
     virtual ~MainProgram() = default;
     
     // NVI: public non-virtual interface 

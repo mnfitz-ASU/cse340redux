@@ -48,6 +48,7 @@ class InstructionNode
 public:
     // Base class with virtual methods requires virtual dtor: 
     // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#c35-a-base-class-destructor-should-be-either-public-and-virtual-or-protected-and-non-virtual
+    // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#c127-a-class-with-a-virtual-function-should-have-a-virtual-or-protected-destructor
     virtual ~InstructionNode() = default;
 
     // Execute this |InstructionNode| and return pointer 
@@ -177,9 +178,9 @@ class CJumpInstructionNode : public InstructionNode // is-a: InstructionNode
 public:
     CJumpInstructionNode(ConditionKind inKind, int inRHSIndex1, int inRHSIndex2, InstructionNode* inTarget) :
         InstructionNode{InstructionKind::kCJMP},
-        mOp{inKind},
+        mTarget{inTarget},
         mOperandIndex{inRHSIndex1, inRHSIndex2},
-        mTarget{inTarget}
+        mOp{inKind}      
     {   
         // Nothing to do
     }
