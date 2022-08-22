@@ -1,24 +1,34 @@
-#ifndef CSE340_PROJECT2_TOKEN_H
-#define CSE340_PROJECT2_TOKEN_H
+/*
+ * Copyright (C) Matthew Fitzgerald, 2022
+ *
+ * CSE 340, Dr. Bazzi
+ * Do not share this file with anyone
+ */
+
+#ifndef CSE340_PROJECT1_TOKEN_H
+#define CSE340_PROJECT1_TOKEN_H
+// Header include guard:
+// https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf8-use-include-guards-for-all-h-files
 
 // std
 #include <string>
 #include <unordered_map>
 
 namespace cse340 {
-namespace project2 {
+namespace project1 {
 
-/// Holds the complete list of every possibl tokenType we can recognize
+/// Holds the complete list of every possible tokenType we can recognize
 /// Changes with each project
 enum class TokenKind
 { 
-    // Change me for every new assignment
-    kEND_OF_FILE = 0, kARROW, kSTAR, kHASH, kID, kERROR, 
+    // enum class: 
+    // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Renum-class
+    // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Renum-caps    
     
-    // REVISIT mnfitz 20aug2022: Move kNum knowledge into token.cc
-    // Not all assignments use a kNUM token, so knowledge of 
-    // scanning kNUM should be moved into token.cc?
-    kNUM = kERROR // SUPERHACK
+    kEND_OF_FILE = 0,
+    kMAIN, kPROC,
+    kENDPROC, kINPUT, kOUTPUT , kDO , kEQUAL, kNUM, kID, 
+    kSEMICOLON, kPLUS , kMINUS, kMULT, kDIV, kERROR
 };
 
 // Define my own Keyword Dictionary type
@@ -54,14 +64,14 @@ inline Token::Token(TokenKind inTokenKind, int inLineNumber) :
     // Nothing to do
 }
 
-} // namespace project2
+} // namespace project1
 
-// REVIEW mnfitz 20aug2022: Bring project2 into cse340 scope
+// REVIEW mnfitz 20aug2022: Bring project1 into cse340 scope
 // Seems iffy for the header file to bring the project namespace into scope
 // Shouldn't the user of the header file do this in the .cc file
 // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf7-dont-write-using-namespace-at-global-scope-in-a-header-file
-using namespace project2;
+using namespace project1;
 
 } // namespace cse340
 
-#endif // CSE340_PROJECT2_TOKEN_H
+#endif // CSE340_PROJECT1_TOKEN_H

@@ -1,13 +1,17 @@
-#include <iostream>
-#include <istream>
-#include <fstream>
-#include <vector>
-#include <string>
-#include <cstdio>
-#include <assert.h>
-#include <fstream>
+/*
+ * Copyright (C) Matthew Fitzgerald, 2022
+ *
+ * CSE 340, Dr. Bazzi
+ * Do not share this file with anyone
+ */
 
+// self
 #include "inputbuf.h"
+
+// std
+#include <istream>
+#include <string>
+#include <vector>
 
 namespace cse340 {
 
@@ -23,15 +27,15 @@ char InputBuffer::PeekChar()
             break;
         } 
 
-        // Else read new characters from the stream
-        if (GetStream().eof())
+        auto& stream = GetStream();
+        if (stream.eof())
         {
-            //assert(!"Nothing to read!");
             result = kEOF;
             break;
         }
 
-        result = GetStream().peek();
+        const int peek = stream.peek();
+        result = static_cast<char>(peek);
         if (result == EOF)
         {
             result = kEOF;
@@ -56,14 +60,16 @@ char InputBuffer::GetChar()
             break;
         } 
 
-        // Else read new characters from the stream
-        if (GetStream().eof())
+        auto& stream = GetStream();
+        if (stream.eof())
         {
             //assert(!"Nothing to read!");
             result = kEOF;
             break;
         }
-        result = GetStream().get();
+
+        const int get = stream.get();
+        result = static_cast<char>(get);
 
     } while (false);
 
@@ -107,20 +113,56 @@ void InputBuffer::Reset(std::istream* inStream)
 
 std::istream& InputBuffer::GetStream()
 {
-    if (mStream == nullptr)
-    {
-        throw std::runtime_error{__FUNCTION__ ":ERROR: Trying to access mStream while null\n"};
-    }
-    return *mStream;
+    std::istream* stream = nullptr;
+    do
+    {  
+        if (mStream == nullptr)
+        {
+            stream = &std::cin;
+            break;
+        }
+
+        // TRICKY mnfitz 21aug2022: std::istreams implements an "operator cast" method that  
+        // returns a bool whenever the istream is used in a boolean expression.
+        const bool isValid = mStream->operator bool();
+        if (isValid)
+        {
+            stream = mStream;
+            break;
+        }
+        
+        throw std::runtime_error{__FUNCTION__ ":ERROR: Trying to access invalid stream\n"};
+
+    } while (false);
+
+    return *stream;
 }
 
 const std::istream& InputBuffer::GetStream() const
 {
-    if (mStream == nullptr)
-    {
-        throw std::runtime_error{__FUNCTION__ ":ERROR: Trying to access mStream while null\n"};
-    }
-    return *mStream;
+    std::istream* stream = nullptr;
+    do
+    {  
+        if (mStream == nullptr)
+        {
+            stream = &std::cin;
+            break;
+        }
+
+        // TRICKY mnfitz 21aug2022: std::istreams implements an "operator cast" method that  
+        // returns a bool whenever the istream is used in a boolean expression.
+        const bool isValid = mStream->operator bool();
+        if (isValid)
+        {
+            stream = mStream;
+            break;
+        }
+        
+        throw std::runtime_error{__FUNCTION__ ":ERROR: Trying to access invalid stream\n"};
+
+    } while (false);
+
+    return *stream;
 }
 
 } // namespace cse340

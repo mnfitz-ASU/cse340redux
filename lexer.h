@@ -1,5 +1,14 @@
-#ifndef LEXER_H
-#define LEXER_H
+/*
+ * Copyright (C) Matthew Fitzgerald, 2022
+ *
+ * CSE 340, Dr. Bazzi
+ * Do not share this file with anyone
+ */
+
+#ifndef CSE340_PROJECT4_LEXER_H
+#define CSE340_PROJECT4_LEXER_H
+// Header include guard:
+// https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf8-use-include-guards-for-all-h-files
 
 // cse340
 #include "inputbuf.h"
@@ -71,4 +80,4 @@ private:
 
 } // namespace cse340
 
-#endif // LEXER_H
+#endif // CSE340_PROJECT4_LEXER_H
