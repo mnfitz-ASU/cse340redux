@@ -1,13 +1,15 @@
 <div id="top"></div>
 
 <p align="center">
+    <!--
     <a href="https://github.com/mnfitz-ASU/cse340redux/graphs/contributors" alt="Contributors">
-        <img src="https://img.shields.io/github/contributors/badges/shields" /></a>
+        <img src="https://img.shields.io/github/contributors/mnfitz-ASU/cse340redux" /></a>
     <a href="https://github.com/mnfitz-ASU/cse340redux/pulse" alt="Activity">
-        <img src="https://img.shields.io/github/commit-activity/m/badges/shields" /></a>
+        <img src="https://img.shields.io/github/commit-activity/mnfitz-ASU/cse340redux" /></a>
     <a href="https://discord.gg/sKXHzHpq">
         <img src="https://img.shields.io/discord/308323056592486420?logo=discord"
             alt="chat on Discord"></a>
+    -->
     <a href="https://www.linkedin.com/in/matthew-n-fitzgerald/">
         <img src="https://img.shields.io/badge/-matthewf-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/matthew-n-fitzgerald/"
             alt="follow on Linkedin"></a>
