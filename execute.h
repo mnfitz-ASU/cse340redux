@@ -5,8 +5,8 @@
  * Do not share this file with anyone
  */
 
-#ifndef EXECUTE_H
-#define EXECUTE_H
+#ifndef CSE340_PROJECT4_EXECUTE_H
+#define CSE340_PROJECT4_EXECUTE_H
 // Header include guard:
 // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf8-use-include-guards-for-all-h-files
 
@@ -16,6 +16,9 @@
 
 namespace cse340 {
 
+// enum class: 
+// https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Renum-class
+// https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Renum-caps  
 enum class ArithmeticKind 
 {
     kOPERATOR_NONE = 123,
@@ -103,6 +106,7 @@ inline void InstructionNode::SetNext(InstructionNode* inNext)
     mNext = inNext;
 }
 
+// AssignInstructionNode: Derived class implementing the functionality of kASSIGN instructions
 class AssignInstructionNode : public InstructionNode // is-a: InstructionNode
 {
 public:
@@ -124,6 +128,7 @@ private:
     ArithmeticKind mOp{ArithmeticKind::kOPERATOR_NONE};
 };
 
+// NoopInstructionNode: Derived class implementing the functionality of kNOOP instructions
 class NoopInstructionNode : public InstructionNode // is-a: InstructionNode
 {
 public:
@@ -137,6 +142,7 @@ private:
     InstructionNode* OnExecute() const override;
 };
 
+// InputInstructionNode: Derived class implementing the functionality of kIN instructions
 class InputInstructionNode : public InstructionNode // is-a: InstructionNode
 {
 public:
@@ -156,6 +162,7 @@ private:
     static std::size_t sNextInput;
 };
 
+// OutputInstructionNode: Derived class implementing the functionality of kOUT instructions
 class OutputInstructionNode : public InstructionNode // is-a: InstructionNode
 {
 public:
@@ -173,10 +180,11 @@ private:
     int mOutputIndex{-1};
 };
 
+// CJumpInstructionNode: Derived class implementing the functionality of kCJMP instructions
 class CJumpInstructionNode : public InstructionNode // is-a: InstructionNode
 {
 public:
-    CJumpInstructionNode(ConditionKind inKind, int inRHSIndex1, int inRHSIndex2, InstructionNode* inTarget) :
+    CJumpInstructionNode(ConditionKind inKind, int inRHSIndex1, int inRHSIndex2, InstructionNode* inTarget = nullptr) :
         InstructionNode{InstructionKind::kCJMP},
         mTarget{inTarget},
         mOperandIndex{inRHSIndex1, inRHSIndex2},
@@ -207,6 +215,7 @@ inline void CJumpInstructionNode::SetTarget(InstructionNode* inTarget)
     mTarget = inTarget;
 }
 
+// JumpInstructionNode: Derived class implementing the functionality of kJMP instructions
 class JumpInstructionNode : public InstructionNode // is-a: InstructionNode
 {
 public:
@@ -230,20 +239,6 @@ void ExecuteProgram(InstructionNode* inProgram);
 //---------------------------------------------------------
 // You should write the following function:
 
-InstructionNode* parse_generate_intermediate_representation();
-
-/*
-  NOTE:
-
-  You need to write a function with the above signature. This function
-  is supposed to parse the input program and generate an intermediate
-  representation for it. The output of this function is passed to the
-  execute_program function in main().
-
-  Write your code in a separate file and include this header file in
-  your code.
-*/
-
 } // namespace cse340
 
-#endif // EXECUTE_H
+#endif // CSE340_PROJECT4_EXECUTE_H

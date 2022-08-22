@@ -8,6 +8,9 @@
 // self
 #include "parser.h"
 
+// std
+#include <assert.h>
+
 namespace cse340 {
 
 Token Parser::Expect(TokenKind inExpected)
@@ -24,7 +27,9 @@ Token Parser::Expect(TokenKind inExpected)
 void Parser::ParseProgram(std::istream& inStream)
 {
 	mLexer.Load(inStream);
-	mLexer.PrintTokenList();
+	//mLexer.PrintTokenList();
+	
+	assert(!"Add your own code here!");
 }
 
 } // namespace cse340

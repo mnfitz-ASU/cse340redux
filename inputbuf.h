@@ -5,8 +5,8 @@
  * Do not share this file with anyone
  */
 
-#ifndef INPUT_BUFFER_H
-#define INPUT_BUFFER_H
+#ifndef CSE340_PROJECT4_INPUT_BUFFER_H
+#define CSE340_PROJECT4_INPUT_BUFFER_H
 // Header include guard:
 // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf8-use-include-guards-for-all-h-files
 
@@ -67,4 +67,4 @@ private:
 
 } // namespace cse340
 
-#endif //INPUT_BUFFER_H
+#endif //CSE340_PROJECT4_INPUT_BUFFER_H

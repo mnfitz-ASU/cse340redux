@@ -19,13 +19,6 @@ const KeywordDict& Token::GetKeywordDict()
     // static makes this function level global initialized only when first called
     static const KeywordDict sDict = 
     {
-#if 0
-    END_OF_FILE = 0,
-    SCALAR, ARRAY, OUTPUT, PLUS, MINUS, DIV, MULT,
-    EQUAL, SEMICOLON,
-    LBRAC, RBRAC, LPAREN, RPAREN, LBRACE, RBRACE,
-    DOT, NUM, ID, ERROR
-#endif
         // These are the reserved keywords 
         {"ARRAY", TokenKind::kARRAY},
         {"OUTPUT", TokenKind::kOUTPUT},

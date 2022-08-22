@@ -5,8 +5,8 @@
  * Do not share this file with anyone
  */
 
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef CSE340_PROJECT4_PARSER_H
+#define CSE340_PROJECT4_PARSER_H
 // Header include guard:
 // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf8-use-include-guards-for-all-h-files
 
@@ -28,7 +28,7 @@ public:
 	void ParseProgram(std::istream& inStream);
 
 	// Verifies that the next token consumed is equal to |inExpected|
-	// If not equal to |inExpected|, throws a |ParserSyntaxException|
+	// If not equal to |inExpected|, throws a |cse340::ParserSyntaxException|
 	Token Expect(TokenKind inExpected);
 
 private:
@@ -56,4 +56,4 @@ public:
 
 } // namespace cse340
 
-#endif //PARSER_H
+#endif //CSE340_PROJECT4_PARSER_H

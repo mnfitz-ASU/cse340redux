@@ -229,12 +229,13 @@ Token Lexer::PeekToken(int inLength)
 {
     if (inLength <= 0) 
     {  
+        // std::invalid_argument exception is thrown if |inLength| is less than 1
         // We need to throw an exception here because we cannot peek in place or to the left
         throw std::invalid_argument{__FUNCTION__  ":Error: non positive argument\n"};    
     }
 
     const std::size_t index = static_cast<std::size_t>(mIndex + inLength - 1);
-    const bool isOutOfBounds = (index > mTokenList.size()-1);
+    const bool isOutOfBounds = (index+1 > mTokenList.size());
     if (isOutOfBounds) 
     { // if peeking too far
         Token token{};                        

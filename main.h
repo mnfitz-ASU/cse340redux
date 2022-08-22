@@ -5,8 +5,8 @@
  * Do not share this file with anyone
  */
 
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef CSE340_PROJECT4_MAIN_H
+#define CSE340_PROJECT4_MAIN_H
 // Header include guard:
 // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf8-use-include-guards-for-all-h-files
 
@@ -21,7 +21,8 @@ namespace cse340 {
 class MainProgram
 {
 public:
-    /// Factory method: Creates and returns a unique pointer to the main program 
+    // Factory method: Creates and returns a unique_ptr for a main program 
+    // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f26-use-a-unique_ptrt-to-transfer-ownership-where-a-pointer-is-needed
     static std::unique_ptr<MainProgram> Make();
 
     // Base class with virtual methods requires virtual dtor: 
@@ -40,11 +41,7 @@ protected:
 
 private:
     // NVI: private virtual implementation 
-    virtual int OnRun(int /*argc*/, char*[] /*argv[]*/) 
-    {
-        assert(!"Create your own OnRun method!");
-        return -1;
-    }
+    virtual int OnRun(int argc, char* argv[]) = 0; // = 0; derived class must implement this
 }; // class MainProgram
 
 // Class related helper function
@@ -69,4 +66,4 @@ inline char* GetLastCommandLineArg(int argc, char* argv[])
 
 int main(int argc, char* argv[]);
 
-#endif // MAIN_H
+#endif // CSE340_PROJECT4_MAIN_H

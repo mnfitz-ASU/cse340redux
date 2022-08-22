@@ -1,3 +1,10 @@
+#
+# Copyright (C) Matthew Fitzgerald, 2022
+#
+# CSE 340, Dr. Bazzi
+# Do not share this file with anyone
+#
+
 cmake_minimum_required(VERSION 3.0.0)
 project(project4 VERSION 0.1.0)
 

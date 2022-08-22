@@ -5,8 +5,8 @@
  * Do not share this file with anyone
  */
 
-#ifndef TOKEN_H
-#define TOKEN_H
+#ifndef CSE340_PROJECT1_TOKEN_H
+#define CSE340_PROJECT1_TOKEN_H
 // Header include guard:
 // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf8-use-include-guards-for-all-h-files
 
@@ -69,8 +69,9 @@ inline Token::Token(TokenKind inTokenKind, int inLineNumber) :
 // REVIEW mnfitz 20aug2022: Bring project1 into cse340 scope
 // Seems iffy for the header file to bring the project namespace into scope
 // Shouldn't the user of the header file do this in the .cc file
+// https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf7-dont-write-using-namespace-at-global-scope-in-a-header-file
 using namespace project1;
 
 } // namespace cse340
 
-#endif // TOKEN_H
+#endif // CSE340_PROJECT1_TOKEN_H

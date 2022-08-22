@@ -122,7 +122,8 @@ std::istream& InputBuffer::GetStream()
             break;
         }
 
-        //const bool isValid = static_cast<bool>(*mStream);
+        // TRICKY mnfitz 21aug2022: std::istreams implements an "operator cast" method that  
+        // returns a bool whenever the istream is used in a boolean expression.
         const bool isValid = mStream->operator bool();
         if (isValid)
         {
@@ -148,7 +149,8 @@ const std::istream& InputBuffer::GetStream() const
             break;
         }
 
-        //const bool isValid = static_cast<bool>(*mStream);
+        // TRICKY mnfitz 21aug2022: std::istreams implements an "operator cast" method that  
+        // returns a bool whenever the istream is used in a boolean expression.
         const bool isValid = mStream->operator bool();
         if (isValid)
         {

@@ -119,10 +119,4 @@ void ExecuteProgram(InstructionNode* inProgram)
     }
 }
 
-InstructionNode* parse_generate_intermediate_representation()
-{
-    // Empty for now
-    return nullptr;
-}
-
 } // namespace cse340
