@@ -1,5 +1,19 @@
 <div id="top"></div>
 
+<p align="center">
+    <a href="https://github.com/mnfitz-ASU/cse340redux/graphs/contributors" alt="Contributors">
+        <img src="https://img.shields.io/github/contributors/badges/shields" /></a>
+    <a href="https://github.com/mnfitz-ASU/cse340redux/pulse" alt="Activity">
+        <img src="https://img.shields.io/github/commit-activity/m/badges/shields" /></a>
+    <a href="https://discord.gg/sKXHzHpq">
+        <img src="https://img.shields.io/discord/308323056592486420?logo=discord"
+            alt="chat on Discord"></a>
+    <a href="https://www.linkedin.com/in/matthew-n-fitzgerald/">
+        <img src="https://img.shields.io/badge/-matthewf-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/matthew-n-fitzgerald/"
+            alt="follow on Linkedin"></a>
+</p>
+
+
 # CSE340 Redux
 The CSE 340 Summer Project to see if I can improve upon my code and the instructor's provided code. The goal of this is to create more robust and professional code rather than code that is just passable. The instructor provided code supported only taking input from `std::cin`. This greatly frustrated debugging efforts in IDE based environments, and inspired me to remake this project.
 Note: This code is written in C++11. C++11 was a requirement because the current automatic grading system was not set up for c++14 or c++17.
