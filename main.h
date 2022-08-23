@@ -10,10 +10,6 @@
 // Header include guard:
 // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf8-use-include-guards-for-all-h-files
 
-// std
-#include <assert.h>
-#include <memory>
-
 namespace cse340 {
 
  // MainProgram utilizes NVI (Non-Virtual Interface) architecture 
@@ -21,9 +17,8 @@ namespace cse340 {
 class MainProgram
 {
 public:
-    // Factory method: Creates and returns a unique_ptr for a main program 
-    // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f26-use-a-unique_ptrt-to-transfer-ownership-where-a-pointer-is-needed
-    static std::unique_ptr<MainProgram> Make();
+    // Default ctor 
+    MainProgram() = default;
 
     // Base class with virtual methods requires virtual dtor: 
     // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#c35-a-base-class-destructor-should-be-either-public-and-virtual-or-protected-and-non-virtual
@@ -35,9 +30,6 @@ public:
     {
         return OnRun(argc, argv);
     }
-
-protected:
-    MainProgram() = default; // Can only be used by a derived class
 
 private:
     // NVI: private virtual implementation 

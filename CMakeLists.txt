@@ -38,12 +38,12 @@ add_executable( a.out
 
 # Xcode specific compiler settings
 if ( CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang|GNU" )
-    target_compile_options(a.out PRIVATE -Wall -Wextra -Wunreachable-code -Wpedantic)
+    target_compile_options(a.out PRIVATE -stdlib=libc++ -Wall -Wno-weak-vtables -Wno-exit-time-destructors -Wno-unreachable-code -Wextra -Wpedantic)
 endif()
 
 # Ubuntu (Linux) specific compile settings
 if ( CMAKE_CXX_COMPILER_ID MATCHES "Clang" )
-    target_compile_options(a.out PRIVATE -Wweak-vtables -Wexit-time-destructors -Wglobal-constructors -Wmissing-noreturn )
+    target_compile_options(a.out PRIVATE -Wno-weak-vtables -Wno-exit-time-destructors -Wno-global-constructors -Wno-missing-noreturn )
 endif()
 
 # Microsoft specific compile settings

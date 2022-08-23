@@ -138,7 +138,8 @@ Lexer::Token Lexer::Peek(int inLength)
     if (inLength <= 0) 
     {  
         // We need to throw an exception here because we cannot peek in place or to the left
-        throw std::runtime_error{__FUNCTION__  ":Error: non positive argument\n"};    
+        const std::string where = __FUNCTION__;
+        throw std::runtime_error{where + ":Error: non positive argument\n"};    
     }
 
     int peekIndex = mIndex + inLength - 1;
