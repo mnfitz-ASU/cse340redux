@@ -55,9 +55,10 @@
     },
     "cmake.debugConfig": 
 	{
-        "args": [
+        "args": 
+        [
             // argv[1] passed as command line arg to the debugger
             "${workspaceFolder}/tests/test29.txt"
-			]
+	    ]
 	}
 }
