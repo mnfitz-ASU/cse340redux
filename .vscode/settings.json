@@ -55,8 +55,10 @@
     },
     "cmake.debugConfig": 
 	{
-        "args": [
-            "C:/Users/mn-fi/Projects/git/cse340redux/tests/test29.txt"
-			]
+        "args": 
+        [
+            // argv[1] passed as command line arg to the debugger
+            "${workspaceFolder}/tests/test29.txt"
+	    ]
 	}
 }

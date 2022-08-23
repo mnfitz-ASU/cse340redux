@@ -20,9 +20,9 @@ set(CMAKE_CXX_STANDARD 11)
 # Uncomment the version of project to build
 set(    ThisProject 
         #"project1"
-        "project2"
+        #"project2"
         #"project3"
-        #"project4"
+        "project4"
     )
 # Add the project specific include path
 include_directories(${PROJECT_SOURCE_DIR}/${ThisProject})

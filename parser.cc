@@ -26,7 +26,9 @@ Token Parser::Expect(TokenKind inExpected)
 
 void Parser::ParseProgram(std::istream& inStream)
 {
+	// Scan the provided stream and generate the |mTokenList|
 	mLexer.Load(inStream);
+	
 	//mLexer.PrintTokenList();
 	
 	assert(!"Add your own code here!");
