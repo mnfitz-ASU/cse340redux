@@ -60,7 +60,8 @@ std::istream& InputBuffer::GetStream()
 {
     if (mStream == nullptr)
     {
-        throw std::runtime_error{__FUNCTION__ ":ERROR: Trying to access mStream while null\n"};
+        const std::string where = __FUNCTION__;
+        throw std::runtime_error{where + ":ERROR: Trying to access mStream while null\n"};
     }
     return *mStream;
 }
@@ -69,7 +70,8 @@ const std::istream& InputBuffer::GetStream() const
 {
     if (mStream == nullptr)
     {
-        throw std::runtime_error{__FUNCTION__ ":ERROR: Trying to access mStream while null\n"};
+        const std::string where = __FUNCTION__;
+        throw std::runtime_error{where + ":ERROR: Trying to access mStream while null\n"};
     }
     return *mStream;
 }

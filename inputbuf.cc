@@ -131,7 +131,8 @@ std::istream& InputBuffer::GetStream()
             break;
         }
         
-        throw std::runtime_error{__FUNCTION__ ":ERROR: Trying to access invalid stream\n"};
+        const std::string where = __FUNCTION__;
+        throw std::runtime_error{where + ":ERROR: Trying to access invalid stream\n"};
 
     } while (false);
 
@@ -158,7 +159,7 @@ const std::istream& InputBuffer::GetStream() const
             break;
         }
         
-        throw std::runtime_error{__FUNCTION__ ":ERROR: Trying to access invalid stream\n"};
+        throw std::runtime_error{":ERROR: Trying to access invalid stream\n"};
 
     } while (false);
 

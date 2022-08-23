@@ -12,6 +12,7 @@
 #include "parser.h"
 
 // std
+#include <assert.h>
 #include <fstream>
 #include <stdexcept>
 
@@ -47,18 +48,6 @@ private:
 };
 
 } // namespace /*anonymous*/
-
-namespace cse340 {
-    
-// Factory method: Creates and returns a unique_ptr for a main program 
-// https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f26-use-a-unique_ptrt-to-transfer-ownership-where-a-pointer-is-needed
-/*static*/ std::unique_ptr<MainProgram> MainProgram::Make()
-{
-    auto mainProgram = std::make_unique<MyMainProgram>();
-    return mainProgram;
-}
-
-} // namespace cse340
 
 int main(int argc, char* argv[])
 {
