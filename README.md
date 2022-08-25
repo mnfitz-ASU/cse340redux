@@ -2,14 +2,14 @@
 
 <p align="center">
     <!--
-    <a href="https://github.com/mnfitz-ASU/cse340redux/graphs/contributors" alt="Contributors">
-        <img src="https://img.shields.io/github/contributors/mnfitz-ASU/cse340redux" /></a>
     <a href="https://github.com/mnfitz-ASU/cse340redux/pulse" alt="Activity">
         <img src="https://img.shields.io/github/commit-activity/mnfitz-ASU/cse340redux" /></a>
     <a href="https://discord.gg/sKXHzHpq">
         <img src="https://img.shields.io/discord/308323056592486420?logo=discord"
             alt="chat on Discord"></a>
     -->
+    <a href="https://github.com/mnfitz-ASU/mnfitz-ASU/graphs/contributors" alt="Contributors">
+        <img src="https://img.shields.io/github/contributors/mnfitz-ASU/mnfitz-ASU" /></a>    
     <a href="https://www.linkedin.com/in/matthew-n-fitzgerald/">
         <img src="https://img.shields.io/badge/-matthewf-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/matthew-n-fitzgerald/"
             alt="follow on Linkedin"></a>
@@ -17,19 +17,62 @@
 
 
 # CSE340 Redux
-The CSE 340 Summer Project to see if I can improve upon my code and the instructor's provided code. The goal of this is to create more robust and professional code rather than code that is just passable. The instructor provided code supported only taking input from `std::cin`. This greatly frustrated debugging efforts in IDE based environments, and inspired me to remake this project.
-Note: This code is written in C++11. C++11 was a requirement because the current automatic grading system was not set up for c++14 or c++17.
+The CSE 340 Senior Year Summer Project to improve upon my knowledge of C++ and the instructor's provided code. This project improves upon the instructor provided CSE 340 "skeleton code" used as the basis for all CSE 340 programming assignments. This project was inspired by th edifficulty I had trying to debug CSE 340 assignments in an IDE. Because the skeleton code only took input from `std::cin`, this frustrated efforts to do source level debugging from wthin an IDE.
+My goal is to modify this skeleton code so that it could integrate with an IDE based debugger 
+<br/>
+Note: This code is entirely in C++11, as it's a requirement by the current automatic grading system. 
+<br/>
 Note: This code is not the solution for any of the assignments, it is merely a alternative to the instructor provided code
-### Goals: 
-- Add ability to optionally read from file stream instead of only `std::cin`
-- Minimize number of source files to be updated as keywords change for each assignment
-- Apply modern c++11 techniques as referenced by the c++ Core Guidelines to both design and implementation
-  - Use c++ namespaces
-  - RAII using `std::unique_ptr` instead of `new` and `delete`
-  - Use NVI where applicable
-  - Use exceptions and `try/catch()` instead of `exit()`
-  - Practice good `const` variable and method habits
 
+## Goals: 
+#### 1.0: Allow all editing and debugging to take place in [VSCode](https://code.visualstudio.com/).
+```
+// Same editing/debugging experience for Mac, Windows, and Linux
+```
+#### 2.0: Allow VSCode to optionally take input from file instead of exclusively 'std::cin' 
+```
+# Old Method: input from std::cin
+$ ./a.out < ./test/testfile.txt # always std::cin
+
+# New Method: optional commandline arg for inputfile
+$ ./a.out ./test/testfile.txt # argv[argc-1]
+```
+#### 3.0: Minimize number of source files to be updated as keywords change for each assignment
+```
+# Added new token.h and token.cc source files that 
+# contain the keywords for any specific assignment 
+# Assignment specific versions of these files live 
+# in their own subdirectory ./projectN
+# This means the makefile must select the source
+# file from the appropriate subdirectory
+
+$ pwd
+/c/Users/mn-fi/Projects/git/cse340redux
+$ ls project*
+project1:
+token.cc  token.h
+
+project2:
+token.cc  token.h
+
+project3:
+token.cc  token.h
+
+project4:
+token.cc  token.h
+```
+#### 4.0: Use key/value dictionary to store assignment specific set of keywords
+```
+/// Prefer std::unordered_map over std::map as we don't need any sorted order of keys
+using KeywordDict = std::unordered_map<std::string, TokenKind>;
+```
+#### 5.0: Use modern OO techniques and [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines) where possible for both design and implementation
+```
+// Use c++ namespaces
+// Use [NVI](https://en.wikipedia.org/wiki/Non-virtual_interface_pattern) for base/derived class interface
+// Use `throw` instead of `exit()` for program exceptions
+// Practice good `const` variable and method habits
+```
 ### Prerequisites
 
 This is an example of how to list things you need to use the software and how to install them.
@@ -37,7 +80,7 @@ This is an example of how to list things you need to use the software and how to
   ```sh
   npm install npm@latest -g
   ```
-
+  
 <!-- LICENSE -->
 ### License
 
