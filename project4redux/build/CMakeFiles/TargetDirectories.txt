@@ -1,9 +1,0 @@
-C:/Users/mn-fi/Projects/git/cse340redux/project4redux/build/CMakeFiles/Experimental.dir
-C:/Users/mn-fi/Projects/git/cse340redux/project4redux/build/CMakeFiles/Nightly.dir
-C:/Users/mn-fi/Projects/git/cse340redux/project4redux/build/CMakeFiles/Continuous.dir
-C:/Users/mn-fi/Projects/git/cse340redux/project4redux/build/CMakeFiles/NightlyMemoryCheck.dir
-C:/Users/mn-fi/Projects/git/cse340redux/project4redux/build/CMakeFiles/a.out.dir
-C:/Users/mn-fi/Projects/git/cse340redux/project4redux/build/CMakeFiles/PACKAGE.dir
-C:/Users/mn-fi/Projects/git/cse340redux/project4redux/build/CMakeFiles/RUN_TESTS.dir
-C:/Users/mn-fi/Projects/git/cse340redux/project4redux/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/mn-fi/Projects/git/cse340redux/project4redux/build/CMakeFiles/ZERO_CHECK.dir
