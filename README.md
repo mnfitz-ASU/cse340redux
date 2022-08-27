@@ -17,18 +17,23 @@
 
 
 # CSE340 Redux
-The CSE 340 Senior Year Summer Project to improve upon my knowledge of C++ and the instructor's provided code. This project improves upon the instructor provided CSE 340 "skeleton code" used as the basis for all CSE 340 programming assignments. This project was inspired by th edifficulty I had trying to debug CSE 340 assignments in an IDE. Because the skeleton code only took input from `std::cin`, this frustrated efforts to do source level debugging from wthin an IDE.
+The CSE 340 Senior Year Summer Project to improve my knowledge of C++. 
+- Idea: Make CSE340 work under [VSCode](https://code.visualstudio.com/). 
+
+This project modifies the instructor provided CSE 340 "skeleton code" used as the basis for all CSE 340 programming assignments. This project was inspired by the difficulty I had trying to debug CSE 340 assignments in an IDE. Because the skeleton code only took input from `std::cin`, this frustrated efforts to do source level debugging from wthin an IDE.
 My goal is to modify this skeleton code so that it could integrate with an IDE based debugger 
 <br/>
-Note: This code is entirely in C++11, as it's a requirement by the current automatic grading system. 
+**Note**: This code is entirely in C++11, as it's a requirement by the current automatic grading system. 
 <br/>
-Note: This code is not the solution for any of the assignments, it is merely a alternative to the instructor provided code
+**Note**: This code is not the solution for any of the assignments, it is merely a alternative to the instructor provided code
 
 ## Goals: 
 #### 1.0: Allow all editing and debugging to take place in [VSCode](https://code.visualstudio.com/).
-```
-// Same editing/debugging experience for Mac, Windows, and Linux
-```
+
+<p align="center">
+  <img alt="VSCode" src="https://user-images.githubusercontent.com/35271042/118224532-3842c400-b438-11eb-923d-a5f66fa6785a.png" width=720>
+</p>
+
 #### 2.0: Allow VSCode to optionally take input from file instead of exclusively 'std::cin' 
 ```
 # Old Method: input from std::cin
@@ -37,6 +42,27 @@ $ ./a.out < ./test/testfile.txt # always std::cin
 # New Method: optional commandline arg for inputfile
 $ ./a.out ./test/testfile.txt # argv[argc-1]
 ```
+##### Q: "How do I tell VSCode which file to use for input?"
+##### A: "Update the `cmake.debugConfig` in `./.vscode/settings.json`"
+```
+"cmake.debugConfig": 
+	{
+        "args": 
+        [
+            // Add your command line args here
+            // "-x", // argv[1] : First command line arg 
+            // "-y", // argv[2] : Second command line arg 
+            // etc...
+            
+            // argv[argc-1] : last command line arg 
+            // Interperet the last command line arg as optional file for input
+            // Must be the last argument; do not add any args after this!
+            // Change this line to the input file of your choice
+            "${workspaceFolder}/project4/tests/test29.txt"
+	    ]
+	}
+```
+
 #### 3.0: Minimize number of source files to be updated as keywords change for each assignment
 ```
 # Added new token.h and token.cc source files that 
@@ -67,20 +93,11 @@ token.cc  token.h
 using KeywordDict = std::unordered_map<std::string, TokenKind>;
 ```
 #### 5.0: Use modern OO techniques and [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines) where possible for both design and implementation
-```
-// Use c++ namespaces
-// Use [NVI](https://en.wikipedia.org/wiki/Non-virtual_interface_pattern) for base/derived class interface
-// Use `throw` instead of `exit()` for program exceptions
-// Practice good `const` variable and method habits
-```
-### Prerequisites
+- Use c++ namespaces
+- Use [NVI](https://en.wikipedia.org/wiki/Non-virtual_interface_pattern) for base/derived class interface
+- Use `throw` instead of `exit()` for program exceptions
+- Practice good `const` variable and method habits
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
-  
 <!-- LICENSE -->
 ### License
 
