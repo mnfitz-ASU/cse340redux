@@ -5,8 +5,8 @@
  * Do not share this file with anyone
  */
 
-#ifndef CSE340_PROJECT4_EXECUTE_H
-#define CSE340_PROJECT4_EXECUTE_H
+#ifndef CSE340_EXECUTE_H
+#define CSE340_EXECUTE_H
 // Header include guard:
 // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf8-use-include-guards-for-all-h-files
 
@@ -62,10 +62,11 @@ public:
     // Return |InstructionKind| of this node
     InstructionKind GetKind() const;
 
-    // Return the next |InstructionNode| of this node
+    // Return the next |InstructionNode| in "program sequence," 
+    // returns nullptr if at end of program
     InstructionNode* GetNext() const;
 
-    // Sets the next |InstructionNode| to follow this node in the program sequence 
+    // Sets the next |InstructionNode| to follow this node in the "program sequence"
     void SetNext(InstructionNode* inNext);
 
 protected:
@@ -107,7 +108,8 @@ inline void InstructionNode::SetNext(InstructionNode* inNext)
 }
 
 // AssignInstructionNode: Derived class implementing the functionality of kASSIGN instructions
-class AssignInstructionNode : public InstructionNode // is-a: InstructionNode
+class AssignInstructionNode : 
+    public InstructionNode // is-a: InstructionNode
 {
 public:
     AssignInstructionNode(ArithmeticKind inKind, int inLHSIndex, int inRHSIndex1, int inRHSIndex2) :
@@ -129,7 +131,8 @@ private:
 };
 
 // NoopInstructionNode: Derived class implementing the functionality of kNOOP instructions
-class NoopInstructionNode : public InstructionNode // is-a: InstructionNode
+class NoopInstructionNode : 
+    public InstructionNode // is-a: InstructionNode
 {
 public:
     NoopInstructionNode() :
@@ -143,7 +146,8 @@ private:
 };
 
 // InputInstructionNode: Derived class implementing the functionality of kIN instructions
-class InputInstructionNode : public InstructionNode // is-a: InstructionNode
+class InputInstructionNode : 
+    public InstructionNode // is-a: InstructionNode
 {
 public:
     InputInstructionNode(int inInputIndex) :
@@ -163,7 +167,8 @@ private:
 };
 
 // OutputInstructionNode: Derived class implementing the functionality of kOUT instructions
-class OutputInstructionNode : public InstructionNode // is-a: InstructionNode
+class OutputInstructionNode : 
+    public InstructionNode // is-a: InstructionNode
 {
 public:
     OutputInstructionNode(int inOutputIndex) :
@@ -181,7 +186,8 @@ private:
 };
 
 // CJumpInstructionNode: Derived class implementing the functionality of kCJMP instructions
-class CJumpInstructionNode : public InstructionNode // is-a: InstructionNode
+class CJumpInstructionNode :
+    public InstructionNode // is-a: InstructionNode
 {
 public:
     CJumpInstructionNode(ConditionKind inKind, int inRHSIndex1, int inRHSIndex2, InstructionNode* inTarget = nullptr) :
@@ -193,7 +199,13 @@ public:
         // Nothing to do
     }
 
+    // Returns the target |InstructionNode| for this jump instruction when the condition is true
+    // Returns nullptr if no jump target was ever set
     InstructionNode* GetTarget() const;
+    
+    // Sets the target |InstructionNode| for this CJump instruction
+    // During execution, if the jump condition is true, the target |InstructionNode|  
+    // is invoked, else the next instruction is invoked in "program sequence"
     void SetTarget(InstructionNode* inTarget);
 
 private:
@@ -216,7 +228,8 @@ inline void CJumpInstructionNode::SetTarget(InstructionNode* inTarget)
 }
 
 // JumpInstructionNode: Derived class implementing the functionality of kJMP instructions
-class JumpInstructionNode : public InstructionNode // is-a: InstructionNode
+class JumpInstructionNode : 
+    public InstructionNode // is-a: InstructionNode
 {
 public:
     JumpInstructionNode(InstructionNode* inTarget) :
@@ -226,12 +239,33 @@ public:
         // Nothing to do
     }
 
+    // Returns the target for this Jump instruction
+    // Returns nullptr if no jump target was ever set
+    InstructionNode* GetTarget() const;
+    
+    // Sets the target InstructionNode for this jump instruction
+    // During execution, the target |InstructionNode| is always invoked
+    // Because this is an unconditional jump, we never 
+    // invoke next |InstructionNode| in the "program sequence"
+    // (Next vs Target: This seems to be a difference from the original code)
+    void SetTarget(InstructionNode* inTarget);
+
 private:
     InstructionNode* OnExecute() const override;
 
 private:
     InstructionNode* mTarget;
 };
+
+inline InstructionNode* JumpInstructionNode::GetTarget() const
+{
+    return mTarget;
+}
+
+inline void JumpInstructionNode::SetTarget(InstructionNode* inTarget)
+{
+    mTarget = inTarget;
+}
 
 // Executes the linked list of InstructionNodes provided by |inProgram|
 void ExecuteProgram(InstructionNode* inProgram);
@@ -241,4 +275,4 @@ void ExecuteProgram(InstructionNode* inProgram);
 
 } // namespace cse340
 
-#endif // CSE340_PROJECT4_EXECUTE_H
+#endif // CSE340_EXECUTE_H

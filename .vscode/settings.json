@@ -57,8 +57,16 @@
 	{
         "args": 
         [
-            // argv[1] passed as command line arg to the debugger
-            "${workspaceFolder}/tests/test29.txt"
+            // Add your command line args here
+            // "-x", // argv[1] : First command line arg 
+            // "-y", // argv[2] : Second command line arg 
+            // etc...
+            
+            // argv[argc-1] : last command line arg 
+            // Interperet the last command line arg as optional file for input
+            // Must be the last argument; do not add any args after this!
+            // Change this line to the input file of your choice
+            "${workspaceFolder}/project4/tests/test29.txt"
 	    ]
 	}
 }

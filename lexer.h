@@ -5,8 +5,8 @@
  * Do not share this file with anyone
  */
 
-#ifndef CSE340_PROJECT4_LEXER_H
-#define CSE340_PROJECT4_LEXER_H
+#ifndef CSE340_LEXER_H
+#define CSE340_LEXER_H
 // Header include guard:
 // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf8-use-include-guards-for-all-h-files
 
@@ -80,4 +80,4 @@ private:
 
 } // namespace cse340
 
-#endif // CSE340_PROJECT4_LEXER_H
+#endif // CSE340_LEXER_H

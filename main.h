@@ -5,8 +5,8 @@
  * Do not share this file with anyone
  */
 
-#ifndef CSE340_PROJECT4_MAIN_H
-#define CSE340_PROJECT4_MAIN_H
+#ifndef CSE340_MAIN_H
+#define CSE340_MAIN_H
 // Header include guard:
 // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf8-use-include-guards-for-all-h-files
 
@@ -58,4 +58,4 @@ inline char* GetLastCommandLineArg(int argc, char* argv[])
 
 int main(int argc, char* argv[]);
 
-#endif // CSE340_PROJECT4_MAIN_H
+#endif // CSE340_MAIN_H
