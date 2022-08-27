@@ -245,7 +245,7 @@ public:
     
     // Sets the target InstructionNode for this jump instruction
     // During execution, the target |InstructionNode| is always invoked
-    // Because this is an unonditional jump, we never 
+    // Because this is an unconditional jump, we never 
     // invoke next |InstructionNode| in the "program sequence"
     // (Next vs Target: This seems to be a difference from the original code)
     void SetTarget(InstructionNode* inTarget);
