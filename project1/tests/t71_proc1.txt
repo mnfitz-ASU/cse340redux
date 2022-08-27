@@ -1,0 +1,9 @@
+PROC 7
+X = 2;
+ENDPROC
+MAIN
+X = 1;
+OUTPUT X;
+7;
+OUTPUT X;
+1 2 3

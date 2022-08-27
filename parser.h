@@ -5,8 +5,8 @@
  * Do not share this file with anyone
  */
 
-#ifndef CSE340_PROJECT4_PARSER_H
-#define CSE340_PROJECT4_PARSER_H
+#ifndef CSE340_PARSER_H
+#define CSE340_PARSER_H
 // Header include guard:
 // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf8-use-include-guards-for-all-h-files
 
@@ -56,4 +56,4 @@ public:
 
 } // namespace cse340
 
-#endif //CSE340_PROJECT4_PARSER_H
+#endif //CSE340_PARSER_H
