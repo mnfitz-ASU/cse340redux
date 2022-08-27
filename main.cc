@@ -9,6 +9,7 @@
 #include "main.h"
 
 // cse340
+#include "execute.h"
 #include "parser.h"
 
 // std
@@ -24,7 +25,9 @@ namespace /*annonymous*/ {
 
 using namespace cse340;
 
-class MyMainProgram : public cse340::MainProgram // is-a cse340::MainProgram
+// Derived main program class for this assignment
+class MyMainProgram :
+    public cse340::MainProgram // is-a cse340::MainProgram
 {
 private:
     // OnRun() override
