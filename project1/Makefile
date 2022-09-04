@@ -5,7 +5,7 @@ MYDIR = $(shell pwd)
 MYOBJS = execute.o inputbuf.o lexer.o main.o parser.o token.o
 
 # Subdirectory that contains project specific files
-MYPROJ = project
+MYPROJ = project1
 
 CC=g++
 CFLAGS=-g -Wall -std=c++11 -I./$(MYPROJ)
