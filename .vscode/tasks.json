@@ -1,0 +1,60 @@
+{
+	"version": "2.0.0",
+    "options": {
+        // WARNING: Make sure that your ~/.bashrc doesn't manually set
+        // a current working directory for you; eg. 'cd' command.
+        // Otherwise, it will undo this "cwd" tuple and you 
+        // will get the error "make failed with code 2."
+        "cwd": "${workspaceFolder}",
+    },
+	"tasks": [
+		// "make all" (default) task
+        // =========================
+        {
+            "label": "make all",
+            "type": "shell",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+			"windows": {"command": "mingw32-make"},
+			"osx": {"command": "make"},
+			"linux": {"command": "make"},
+			"args": [
+			    //"--directory=${workspaceFolder}",
+                "all"
+           ],
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": "$gcc"
+        },
+
+		// "make clean" task
+        // ==================
+        {
+            "label": "make clean",
+            "type": "shell",
+            "group": "build",
+            "windows": {"command": "mingw32-make"},
+			"osx": {"command": "make"},
+			"linux": {"command": "make"},
+            "args": [
+			    //"--directory=${workspaceFolder}",
+                "clean"
+            ],
+            "presentation": {
+                "reveal":"always"
+            },
+        },
+		
+		// "make rebuild" task
+        // ===================
+        {
+            "label": "make rebuild",
+            "group": "build",
+            "dependsOrder": "sequence",
+            "dependsOn": ["make clean", "make all"] // {"label": "make clean"}, {"label": "make all"}
+        }
+	]
+}

@@ -9,6 +9,7 @@
 #include "inputbuf.h"
 
 // std
+#include <algorithm>
 #include <istream>
 #include <string>
 #include <vector>
