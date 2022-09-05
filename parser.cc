@@ -19,7 +19,7 @@ Token Parser::Expect(TokenKind inExpected)
     if (t.mTokenKind != inExpected)
 	{
 		const std::string what = "Syntax error! '" + t.mLexeme + "' at line: " + std::to_string(t.mLineNumber);
-        throw ParserSyntaxException{what};
+         ParserSyntaxException{what};
 	}
     return t;
 }

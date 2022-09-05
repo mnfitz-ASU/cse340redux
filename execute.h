@@ -11,6 +11,8 @@
 // https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#sf8-use-include-guards-for-all-h-files
 
 //std
+#include <stdexcept>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -43,6 +45,26 @@ enum class InstructionKind
     kASSIGN,
     kCJMP,
     kJMP
+};
+
+// ExecuteJumpTargetException: thrown by ExecuteProgram when jump instruction has nullptr target 
+// Custom exception so you can distinguish execute jump target errors from regular runtime_errors
+// http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#e14-use-purpose-designed-user-defined-types-as-exceptions-not-built-in-types
+class ExecuteJumpTargetException :
+	public std::runtime_error // is-a: std::runtime_error
+{
+public:
+	ExecuteJumpTargetException(const std::string& inWhat) :
+		std::runtime_error(inWhat)
+	{
+		// empty
+	}
+	
+	ExecuteJumpTargetException(const char* inWhat) :
+		std::runtime_error(inWhat)
+	{
+		// empty
+	}
 };
 
 // Base class for all derived InstructionNodes
@@ -268,6 +290,7 @@ inline void JumpInstructionNode::SetTarget(InstructionNode* inTarget)
 }
 
 // Executes the linked list of InstructionNodes provided by |inProgram|
+// Throws |ExecuteJumpTargetException| if it encounters nullptr CJMP/JMP target
 void ExecuteProgram(InstructionNode* inProgram);
 
 //---------------------------------------------------------

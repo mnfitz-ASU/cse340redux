@@ -38,7 +38,8 @@ private:
 // ParserSyntaxException: thrown by parser during syntax error
 // Custom exception so you can distinguish parser syntax errors from regular runtime_errors
 // http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#e14-use-purpose-designed-user-defined-types-as-exceptions-not-built-in-types
-class ParserSyntaxException : public std::runtime_error // is-a: std::runtime_error
+class ParserSyntaxException :
+	public std::runtime_error // is-a: std::runtime_error
 {
 public:
 	ParserSyntaxException(const std::string& inWhat) :
