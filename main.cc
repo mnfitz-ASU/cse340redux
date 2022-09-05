@@ -42,9 +42,11 @@ private:
 		// use the stream to the file as input else read from std::cin
 		std::istream& stream = (fileStream ? fileStream : std::cin);
 
+        // Create a parser  
 		Parser parser{};
-		parser.ParseProgram(stream);
-		
+        // Parse a program from the input stream 
+    	parser.ParseProgram(stream);
+        
 		std::cout << "We did something! " << argv[0] << "\n";
 	    return 0;
     }
