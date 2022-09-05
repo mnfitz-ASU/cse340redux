@@ -31,7 +31,7 @@ My goal is to modify this skeleton code so that it could take an optional comman
 #### 1.0: Allow all editing and debugging to take place in [VSCode](https://code.visualstudio.com/) (using Windows, Linux, or Mac).
 
 <p align="center">
-  <img alt="VSCode" src="https://user-images.githubusercontent.com/35271042/118224532-3842c400-b438-11eb-923d-a5f66fa6785a.png" width=720>
+<img width="931" alt="Screenshot 2022-09-05 122326" src="https://user-images.githubusercontent.com/79553911/188504992-50469454-ecd9-4281-898d-5930e1bbe789.png">
 </p>
 
 #### 2.0: Preserve compatibility with existing autograder
@@ -68,6 +68,12 @@ $ ./a.out ./test/testfile.txt # argv[argc-1]
 	<snip/>
     }
 ```
+##### Q: How do I start the debugger?
+##### A: From the Run and Debug Pane in VSCode, select the c++ build and debug popup menu and hit the green triangle start button
+
+<p align="center">
+<img width="593" alt="arrow" src="https://user-images.githubusercontent.com/79553911/188505788-bd9241bf-ca50-4386-909c-52fbfbda3f22.png">
+<p/>
 
 #### 4.0: Minimize number of source files to be updated as keywords change for each assignment
 ```
