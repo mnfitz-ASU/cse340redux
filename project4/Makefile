@@ -1,3 +1,10 @@
+#
+# Copyright (C) Matthew Fitzgerald, 2022
+#
+# CSE 340, Dr. Bazzi
+# Do not share this file with anyone
+#
+
 # Location of my build
 MYDIR = $(shell pwd)
 
@@ -9,10 +16,6 @@ MYPROJ = project4
 
 CC=g++
 CFLAGS=-g -Wall -std=c++11 -I./$(MYPROJ)
-
-# Download build tools from:
-# https://github.com/niXman/mingw-builds-binaries/releases
-# x86_64-12.2.0-release-posix-seh-rt_v10-rev0.7z
 
 all: a.out
 
