@@ -25,6 +25,7 @@ public:
 	Parser() = default;
 	
 	// Scans |inStream| for tokens and parses the resulting token list
+	// Throws a |ParserSyntaxException| exception if a syntax error is detected
 	void ParseProgram(std::istream& inStream);
 
 	// Verifies that the next token consumed is equal to |inExpected|
@@ -42,17 +43,35 @@ class ParserSyntaxException :
 	public std::runtime_error // is-a: std::runtime_error
 {
 public:
-	ParserSyntaxException(const std::string& inWhat) :
-		std::runtime_error(inWhat)
+	ParserSyntaxException(TokenKind inExpected, const Token& inActual, const std::string& inWhat) :
+		std::runtime_error(inWhat),
+		mExpected{inExpected},
+		mActual{inActual}
 	{
 		// empty
 	}
 	
-	ParserSyntaxException(const char* inWhat) :
-		std::runtime_error(inWhat)
+	ParserSyntaxException(TokenKind inExpected, const Token& inActual, const char* inWhat) :
+		std::runtime_error(inWhat),
+		mExpected{inExpected},
+		mActual{inActual}
 	{
 		// empty
 	}
+
+	TokenKind GetExpected() const
+	{
+		return mExpected;
+	}
+
+	const Token& GetActual() const
+	{
+		return mActual;
+	}
+
+private:
+	TokenKind mExpected;
+	Token mActual;
 };
 
 } // namespace cse340
