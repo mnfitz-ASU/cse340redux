@@ -41,7 +41,8 @@
 			"linux": {"command": "make"},
             "args": [
 			    //"--directory=${workspaceFolder}",
-                "clean"
+                "clean",
+                "--ignore-errors"
             ],
             "presentation": {
                 "reveal":"always"
