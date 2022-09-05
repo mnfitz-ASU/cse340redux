@@ -98,6 +98,12 @@ InstructionNode* CJumpInstructionNode::OnExecute() const
         break;
     }
 
+    if (mTarget == nullptr)
+    {
+        const std::string where = __FUNCTION__;
+        throw ExecuteJumpTargetException{where + ":ERROR: Trying to jump to nullptr target\n"};
+    }
+
     // The jump target is only taken if the condition is satisfied
     InstructionNode* dest = (isConditionTrue ? mTarget : GetNext());
     return dest;
@@ -107,6 +113,13 @@ InstructionNode* JumpInstructionNode::OnExecute() const
 {
     // The jump target is always taken
     // EG: Conditional Jump where the condition is always true
+
+    if (mTarget == nullptr)
+    {
+        const std::string where = __FUNCTION__;
+        throw ExecuteJumpTargetException{where + ":ERROR: Trying to jump to nullptr target\n"};
+    }
+
     return mTarget;
 }
 
