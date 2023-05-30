@@ -68,5 +68,6 @@
             // Change this line to the input file of your choice
             "${workspaceFolder}/project4/tests/test29.txt"
 	    ]
-	}
+    },
+    "C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools"
 }

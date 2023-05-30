@@ -7,16 +7,22 @@
     <a href="https://discord.gg/sKXHzHpq">
         <img src="https://img.shields.io/discord/308323056592486420?logo=discord"
             alt="chat on Discord"></a>
-    -->
+    --
     <a href="https://github.com/mnfitz-ASU/mnfitz-ASU/graphs/contributors" alt="Contributors">
         <img src="https://img.shields.io/github/contributors/mnfitz-ASU/mnfitz-ASU" /></a>    
     <a href="https://www.linkedin.com/in/matthew-n-fitzgerald/">
-        <img src="https://img.shields.io/badge/-matthewf-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/matthew-n-fitzgerald/"
+        <img src=""
             alt="follow on Linkedin"></a>
+    -->
 </p>
 
-
 # CSE340 Redux
+
+[![Test](https://img.shields.io/badge/Language-C++11-green)]()
+[![Test](https://img.shields.io/badge/Dev%20Tools-Clang%20MSVC%20GCC-yellow)]()
+[![Test](https://img.shields.io/github/contributors/mnfitz-ASU/mnfitz-ASU)](https://github.com/mnfitz-ASU/mnfitz-ASU/graphs/contributors)
+[![Test](https://img.shields.io/badge/-matthewf-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/matthew-n-fitzgerald/)](https://www.linkedin.com/in/matthew-n-fitzgerald/)
+
 The CSE 340 Senior Year Summer Project to improve my knowledge of C++. 
 - Idea: Make CSE340 lab assignments compatible with [VSCode](https://code.visualstudio.com/). 
 
